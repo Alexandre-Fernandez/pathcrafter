@@ -19,7 +19,8 @@
 	],
 	"scripts": {
 		"prepare": "ts-patch install -s",
-		"build": "tsc --project tsconfig.json && node bin/build.cjs"
+		"build": "tsc --project tsconfig.json && node bin/build.cjs",
+		"publish": "npm run build && node bin/pre-publish.cjs && npm publish && node bin/post-publish.cjs"
 	},
 	"devDependencies": {
 		"@types/node": "^20.1.4",
