@@ -28,6 +28,9 @@ importers:
       astro:
         specifier: ^2.4.1
         version: 2.4.5
+      pathcrafter:
+        specifier: workspace:*
+        version: link:../../pathcrafter
     devDependencies:
       af-prettierrc:
         specifier: ^1.0.0

@@ -20,6 +20,7 @@
 		"prettier-plugin-astro": "^0.8.1"
 	},
 	"dependencies": {
-		"astro": "^2.4.1"
+		"astro": "^2.4.1",
+		"pathcrafter": "workspace:*"
 	}
 }
