@@ -1,0 +1,23 @@
+{
+	"extends": "af-tsconfig",
+	"compilerOptions": {
+		"target": "es2017",
+		"emitDeclarationOnly": true,
+		"declaration": true,
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"paths": {
+			"@src": ["./src"],
+			"@src/*": ["./src/*"],
+			"@lib": ["./lib"],
+			"@lib/*": ["./lib/*"]
+		},
+		"plugins": [
+			{
+				"transform": "typescript-transform-paths",
+				"afterDeclarations": true
+			}
+		]
+	},
+	"include": ["src", "lib"]
+}

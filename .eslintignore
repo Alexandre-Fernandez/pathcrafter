@@ -1,0 +1,6 @@
+node_modules
+esbuild
+dist
+*.js
+*.cjs
+*.mjs

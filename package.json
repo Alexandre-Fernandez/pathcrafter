@@ -1,0 +1,22 @@
+{
+	"name": "pathcrafter-monorepo",
+	"private": true,
+	"scripts": {
+		"build": "turbo run build",
+		"dev": "turbo run dev",
+		"lint": "turbo run lint",
+		"format": "prettier --write \"**/*.{ts,tsx,md}\""
+	},
+	"devDependencies": {
+		"af-prettierrc": "^1.0.0",
+		"eslint": "^7.32.0",
+		"eslint-config-af-typescript": "^1.5.0",
+		"prettier": "^2.8.8",
+		"turbo": "^1.9.3",
+		"typescript": "^5.0.4"
+	},
+	"packageManager": "pnpm@7.15.0",
+	"engines": {
+		"node": ">=18.0.0"
+	}
+}
