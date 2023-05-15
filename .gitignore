@@ -25,6 +25,7 @@ lerna-debug.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
 *.local
 
 # turbo
@@ -48,3 +49,6 @@ lerna-debug.log*
 # build
 dist
 build
+
+#astro
+.astro/
