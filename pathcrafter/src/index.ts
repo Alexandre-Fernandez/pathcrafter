@@ -4,3 +4,7 @@ export function testFn(): void {
 }
 // currently main is set to this file, old:
 // "main": dist/src/index.mjs
+/*
+	"main": "./src/index.ts",
+	"types": "./src/index.ts",
+*/

@@ -19,9 +19,10 @@
 	],
 	"scripts": {
 		"prepare": "ts-patch install -s",
-		"build": "tsc --project tsconfig.json && node esbuild/index.cjs"
+		"build": "tsc --project tsconfig.json && node bin/build.cjs"
 	},
 	"devDependencies": {
+		"@types/node": "^20.1.4",
 		"af-prettierrc": "^1.0.0",
 		"af-tsconfig": "^1.0.2",
 		"esbuild": "^0.17.18",
