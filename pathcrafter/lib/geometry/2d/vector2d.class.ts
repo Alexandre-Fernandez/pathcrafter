@@ -1,3 +1,4 @@
+import Line2d from "@lib/geometry/2d/line2d.class"
 import Point2d from "@lib/geometry/2d/point2d.class"
 import ZeroDivision from "@lib/geometry/errors/zero-division.error"
 
@@ -112,6 +113,10 @@ class Vector2d {
 			this.tail.x,
 			this.tail.y,
 		)
+	}
+
+	toLine2d() {
+		return Line2d.fromPoints(this.tail, this.head)
 	}
 }
 
