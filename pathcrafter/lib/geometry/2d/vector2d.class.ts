@@ -3,40 +3,40 @@ import ZeroDivision from "@lib/geometry/errors/zero-division.error"
 
 class Vector2d {
 	static get TOP() {
-		return Vector2d.fromXY(0, -1)
+		return Vector2d.fromCoordinates(0, -1)
 	}
 
 	static get RIGHT() {
-		return Vector2d.fromXY(1, 0)
+		return Vector2d.fromCoordinates(1, 0)
 	}
 
 	static get BOTTOM() {
-		return Vector2d.fromXY(0, 1)
+		return Vector2d.fromCoordinates(0, 1)
 	}
 
 	static get LEFT() {
-		return Vector2d.fromXY(-1, 0)
+		return Vector2d.fromCoordinates(-1, 0)
 	}
 
 	static get TOP_RIGHT() {
-		return Vector2d.fromXY(1, -1)
+		return Vector2d.fromCoordinates(1, -1)
 	}
 
 	static get TOP_LEFT() {
-		return Vector2d.fromXY(-1, -1)
+		return Vector2d.fromCoordinates(-1, -1)
 	}
 
 	static get BOTTOM_RIGHT() {
-		return Vector2d.fromXY(1, 1)
+		return Vector2d.fromCoordinates(1, 1)
 	}
 
 	static get BOTTOM_LEFT() {
-		return Vector2d.fromXY(-1, 1)
+		return Vector2d.fromCoordinates(-1, 1)
 	}
 
 	constructor(public head: Point2d, public tail = new Point2d(0, 0)) {}
 
-	static fromXY(headX: number, headY: number, tailX = 0, tailY = 0) {
+	static fromCoordinates(headX: number, headY: number, tailX = 0, tailY = 0) {
 		return new Vector2d(
 			new Point2d(headX, headY),
 			new Point2d(tailX, tailY),
@@ -101,8 +101,12 @@ class Vector2d {
 		return this
 	}
 
+	isPositionVector() {
+		return this.tail.x === 0 && this.tail.y === 0
+	}
+
 	clone() {
-		return Vector2d.fromXY(
+		return Vector2d.fromCoordinates(
 			this.head.x,
 			this.head.y,
 			this.tail.x,
