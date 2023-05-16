@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@lib": ["./pathcrafter/lib"],
+			"@lib/*": ["./pathcrafter/lib/*"],
+			"@src": ["./pathcrafter/src"],
+			"@src/*": ["./pathcrafter/src/*"]
+		}
+	}
+}

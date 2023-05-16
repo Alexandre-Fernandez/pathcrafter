@@ -3,10 +3,10 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
-			"@lib": ["../../packages/pathcrafter/lib"],
-			"@lib/*": ["../../packages/pathcrafter/lib/*"],
-			"@src": ["../../packages/pathcrafter/src", "./src"],
-			"@src/*": ["../../packages/pathcrafter/src/*", "./src/*"]
+			"@lib": ["../../pathcrafter/lib"],
+			"@lib/*": ["../../pathcrafter/lib/*"],
+			"@src": ["../../pathcrafter/src", "./src"],
+			"@src/*": ["../../pathcrafter/src/*", "./src/*"]
 		}
 	}
 }
