@@ -3,37 +3,21 @@ import Point2d from "@lib/geometry/2d/point2d.class"
 import ZeroDivision from "@lib/geometry/errors/zero-division.error"
 
 class Vector2d {
-	static get TOP() {
-		return Vector2d.fromCoordinates(0, -1)
-	}
+	static TOP = Object.freeze(Vector2d.fromCoordinates(0, -1))
 
-	static get RIGHT() {
-		return Vector2d.fromCoordinates(1, 0)
-	}
+	static RIGHT = Object.freeze(Vector2d.fromCoordinates(1, 0))
 
-	static get BOTTOM() {
-		return Vector2d.fromCoordinates(0, 1)
-	}
+	static BOTTOM = Object.freeze(Vector2d.fromCoordinates(0, 1))
 
-	static get LEFT() {
-		return Vector2d.fromCoordinates(-1, 0)
-	}
+	static LEFT = Object.freeze(Vector2d.fromCoordinates(-1, 0))
 
-	static get TOP_RIGHT() {
-		return Vector2d.fromCoordinates(1, -1)
-	}
+	static TOP_RIGHT = Object.freeze(Vector2d.fromCoordinates(1, -1))
 
-	static get TOP_LEFT() {
-		return Vector2d.fromCoordinates(-1, -1)
-	}
+	static TOP_LEFT = Object.freeze(Vector2d.fromCoordinates(-1, -1))
 
-	static get BOTTOM_RIGHT() {
-		return Vector2d.fromCoordinates(1, 1)
-	}
+	static BOTTOM_RIGHT = Object.freeze(Vector2d.fromCoordinates(1, 1))
 
-	static get BOTTOM_LEFT() {
-		return Vector2d.fromCoordinates(-1, 1)
-	}
+	static BOTTOM_LEFT = Object.freeze(Vector2d.fromCoordinates(-1, 1))
 
 	constructor(public head: Point2d, public tail = new Point2d(0, 0)) {}
 
@@ -86,19 +70,25 @@ class Vector2d {
 	}
 
 	normalize() {
-		return this.divideByScalar(this.length())
+		return this.scalarDivide(this.length())
 	}
 
-	divideByScalar(scalar: number) {
+	scalarDivide(scalar: number) {
 		if (scalar === 0) {
-			throw new ZeroDivision(
-				`(${this.tail.x}, ${this.tail.y})->(${this.head.x}, ${this.head.y})`,
-			)
+			throw new ZeroDivision(this.toString())
 		}
 		this.head.x /= scalar
 		this.head.y /= scalar
 		this.tail.x /= scalar
 		this.tail.y /= scalar
+		return this
+	}
+
+	scalarMultiply(scalar: number) {
+		this.head.x *= scalar
+		this.head.y *= scalar
+		this.tail.x *= scalar
+		this.tail.y *= scalar
 		return this
 	}
 
@@ -117,6 +107,10 @@ class Vector2d {
 
 	toLine2d() {
 		return Line2d.fromPoints(this.tail, this.head)
+	}
+
+	toString() {
+		return `${this.tail.toString()}->${this.head.toString()}`
 	}
 }
 

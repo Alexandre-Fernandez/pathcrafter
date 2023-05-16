@@ -8,6 +8,14 @@ class Point2d {
 	clone() {
 		return new Point2d(this.x, this.y)
 	}
+
+	values() {
+		return [this.x, this.y]
+	}
+
+	toString() {
+		return `(${this.x}, ${this.y})`
+	}
 }
 
 export default Point2d
