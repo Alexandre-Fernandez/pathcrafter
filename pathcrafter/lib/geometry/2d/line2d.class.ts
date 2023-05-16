@@ -26,6 +26,10 @@ class Line2d {
 		const x = (yIntercept - this.yIntercept) / slopeDifference
 		return new Point2d(x, this.slope * x + this.yIntercept)
 	}
+
+	clone() {
+		return new Line2d(this.slope, this.yIntercept)
+	}
 }
 
 export default Line2d
