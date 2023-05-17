@@ -1,7 +1,7 @@
 import type Point2d from "@lib/geometry/2d/point2d.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type Vector2d from "@lib/geometry/2d/vector2d.class"
-import type MovementType from "@src/core/path/enums/movement-type.enum"
+import type SegmentType from "@src/core/path/enums/segment-type.enum"
 
 export type LengthGetter = () => number
 
@@ -16,20 +16,17 @@ interface BaseVectorProperties {
 }
 
 interface StraightVectorProperties extends BaseVectorProperties {
-	type:
-		| MovementType.Horizontal
-		| MovementType.Vertical
-		| MovementType.Diagonal
+	type: SegmentType.Straight
 }
 
 interface CubicVectorProperties extends BaseVectorProperties {
-	type: MovementType.Cubic
+	type: SegmentType.Cubic
 	getStartControl: Vector2dGetter
 	getEndControl: Vector2dGetter
 }
 
 interface QuadraticVectorProperties extends BaseVectorProperties {
-	type: MovementType.Quadratic
+	type: SegmentType.Quadratic
 	getControl: Vector2dGetter
 }
 

@@ -1,9 +1,9 @@
 import Point2d from "@lib/geometry/2d/point2d.class"
 import Vector2d from "@lib/geometry/2d/vector2d.class"
-import MovementType from "@src/core/path/enums/movement-type.enum"
 import PathInternals from "@src/core/path/path-internals.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type { Coordinates2dGetter, LengthGetter } from "@src/core/path/types"
+import SegmentType from "@src/core/path/enums/segment-type.enum"
 
 /*
 
@@ -73,7 +73,7 @@ class Path {
 	horizontal(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
 		this.internals.vectors.push({
-			type: MovementType.Horizontal,
+			type: SegmentType.Straight,
 			getDisplacement: () => Vector2d.fromCoordinates(getLength(), 0),
 		})
 		return this
@@ -82,7 +82,7 @@ class Path {
 	vertical(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
 		this.internals.vectors.push({
-			type: MovementType.Vertical,
+			type: SegmentType.Straight,
 			getDisplacement: () => Vector2d.fromCoordinates(0, getLength()),
 		})
 		return this
@@ -91,7 +91,7 @@ class Path {
 	diagonal(length: Coordinates2d | Coordinates2dGetter) {
 		const getLength = this.#getterize(length)
 		this.internals.vectors.push({
-			type: MovementType.Diagonal,
+			type: SegmentType.Straight,
 			getDisplacement: () => {
 				const { x, y } = getLength()
 				return Vector2d.fromCoordinates(x, y)
@@ -109,7 +109,7 @@ class Path {
 		const getStartControl = this.#getterize(startControl)
 		const getEndControl = this.#getterize(endControl)
 		this.internals.vectors.push({
-			type: MovementType.Cubic,
+			type: SegmentType.Cubic,
 			getDisplacement: () => {
 				const { x, y } = getLength()
 				return Vector2d.fromCoordinates(x, y)
@@ -133,7 +133,7 @@ class Path {
 		const getLength = this.#getterize(length)
 		const getControl = this.#getterize(control)
 		this.internals.vectors.push({
-			type: MovementType.Quadratic,
+			type: SegmentType.Quadratic,
 			getDisplacement: () => {
 				const { x, y } = getLength()
 				return Vector2d.fromCoordinates(x, y)
