@@ -36,18 +36,6 @@ class Vector2d {
 		return this
 	}
 
-	translateX(x: number) {
-		this.head.x += x
-		this.tail.x += x
-		return this
-	}
-
-	translateY(y: number) {
-		this.head.y += y
-		this.tail.y += y
-		return this
-	}
-
 	length() {
 		const x = this.head.x - this.tail.x
 		const y = this.head.y - this.tail.y

@@ -1,4 +1,6 @@
-class Point2d {
+import type { Coordinates2d } from "@lib/geometry/2d/types"
+
+class Point2d implements Coordinates2d {
 	constructor(public x: number, public y: number) {}
 
 	equals({ x, y }: Point2d) {

@@ -3,24 +3,116 @@ import Layout from "../layouts/Layout.astro"
 ---
 
 <Layout>
-	<svg width="120" height="120" viewBox="0 0 120 120" xmlns="w3.org/2000/svg">
-		<line x1="20" y1="100" x2="100" y2="20" stroke-width="2" stroke="black"
-		></line>
-	</svg>
+	<section>
+		<svg
+			width="120"
+			height="120"
+			viewBox="0 0 120 120"
+			xmlns="w3.org/2000/svg"
+		>
+			<line
+				x1="20"
+				y1="100"
+				x2="100"
+				y2="20"
+				stroke-width="2"
+				stroke="black"></line>
+		</svg>
 
-	<svg width="120" height="120" viewBox="0 0 120 120" xmlns="w3.org/2000/svg">
-		<path
-			d="M20 100 L100 20 L120 120"
-			stroke-width="2"
-			stroke="black"
-			fill="none"></path>
-	</svg>
+		<svg
+			width="120"
+			height="120"
+			viewBox="0 0 120 120"
+			xmlns="w3.org/2000/svg"
+		>
+			<path
+				d="M20 100 L100 20 L120 120"
+				stroke-width="2"
+				stroke="black"
+				fill="none"></path>
+		</svg>
+
+		<svg
+			class="cubic"
+			width="120"
+			height="120"
+			viewBox="0 0 120 120"
+			xmlns="w3.org/2000/svg"
+		>
+			<path
+				d="M20 100 L100 20 C120 0,80 120,120 120"
+				stroke-width="2"
+				stroke="black"
+				fill="none"></path>
+		</svg>
+
+		<svg
+			class="quadratic"
+			width="120"
+			height="120"
+			viewBox="0 0 120 120"
+			xmlns="w3.org/2000/svg"
+		>
+			<path
+				d="M20 100 L100 20 Q30 100,120 120"
+				stroke-width="2"
+				stroke="black"
+				fill="none"></path>
+		</svg>
+	</section>
+
+	<section>
+		<div class="angle"></div>
+		<div class="angle"></div>
+		<div class="angle"></div>
+		<div class="angle"></div>
+		<div class="angle"></div>
+		<div class="angle"></div>
+		<div class="angle"></div>
+	</section>
 </Layout>
 
 <script>
-	import { testFn } from "pathcrafter"
+	// import { Path } from "pathcrafter"
 
-	testFn()
+	// const path = new Path()
+	// 	.setStart({ x: 1, y: 1 })
+	// 	.bottom(10)
+	// 	.right(70)
+	// 	.top(20)
+	// 	.left(() => 40)
+	// 	.top(() => 50)
+	// 	.right(20)
+
+	// console.log(path.toString())
 </script>
 
-<style></style>
+<style>
+	.angle {
+		height: 50px;
+		width: 50px;
+		margin: 5px;
+	}
+
+	.angle:nth-child(1) {
+		background: linear-gradient(0deg, darkslategray 50%, orangered 50%);
+	}
+	.angle:nth-child(2) {
+		background: linear-gradient(15deg, darkslategray 50%, orangered 50%);
+	}
+	.angle:nth-child(3) {
+		background: linear-gradient(30deg, darkslategray 50%, orangered 50%);
+	}
+	.angle:nth-child(4) {
+		background: linear-gradient(45deg, darkslategray 50%, orangered 50%);
+	}
+	.angle:nth-child(5) {
+		background: linear-gradient(60deg, darkslategray 50%, orangered 50%);
+	}
+	.angle:nth-child(6) {
+		background: linear-gradient(75deg, darkslategray 50%, orangered 50%);
+	}
+	.angle:nth-child(7) {
+		background: linear-gradient(90deg, darkslategray 50%, orangered 50%);
+	}
+</style>
