@@ -4,75 +4,10 @@ import Layout from "../layouts/Layout.astro"
 
 <Layout>
 	<section>
-		<svg
-			width="120"
-			height="120"
-			viewBox="0 0 120 120"
-			xmlns="w3.org/2000/svg"
-		>
-			<line
-				x1="20"
-				y1="100"
-				x2="100"
-				y2="20"
-				stroke-width="2"
-				stroke="black"></line>
-		</svg>
-
-		<svg
-			width="120"
-			height="120"
-			viewBox="0 0 120 120"
-			xmlns="w3.org/2000/svg"
-		>
-			<path
-				d="M20 100 L100 20 L120 120"
-				stroke-width="2"
-				stroke="black"
-				fill="none"></path>
-		</svg>
-
-		<svg
-			class="cubic"
-			width="120"
-			height="120"
-			viewBox="0 0 120 120"
-			xmlns="w3.org/2000/svg"
-		>
-			<path
-				d="M20 100 L100 20 C120 0,80 120,120 120"
-				stroke-width="2"
-				stroke="black"
-				fill="none"></path>
-		</svg>
-
-		<svg
-			class="quadratic"
-			width="120"
-			height="120"
-			viewBox="0 0 120 120"
-			xmlns="w3.org/2000/svg"
-		>
-			<path
-				d="M20 100 L100 20 Q30 100,120 120"
-				stroke-width="2"
-				stroke="black"
-				fill="none"></path>
-		</svg>
-
-		<!-- <svg
-			id="svg"
-			width="500"
-			height="500"
-			viewBox="0 0 500 500"
-			xmlns="w3.org/2000/svg"
-		>
-			 <path
-				d="M0 0 L0 10 L10 10"
-				stroke-width="2"
-				stroke="black"
-				fill="none"></path> 
-		</svg> -->
+		<div class="grid">
+			<div id="start" style="grid-row: 7; grid-column: 2;"></div>
+			<div id="end" style="grid-row: 3; grid-column: 7;"></div>
+		</div>
 	</section>
 
 	<section id="result"></section>
@@ -91,34 +26,55 @@ import Layout from "../layouts/Layout.astro"
 <script>
 	import { Path } from "pathcrafter"
 
+	// const path = new Path()
+	// 	.start({ x: 0, y: 0 })
+	// 	.vertical(1)
+	// 	.horizontal(25)
+	// 	.cubic({ x: 50, y: 50 }, { x: 50, y: 0 }, { x: -50, y: 0 })
+	// 	.horizontal(25)
+	// 	.quadratic({ x: 50, y: 50 }, { x: 50, y: 0 })
+	// 	.vertical(50)
+	// 	.diagonal({ x: 50, y: 50 })
+	// 	.diagonal({ x: 50, y: -50 })
+	// 	.vertical(-50)
+
 	const path = new Path()
 		.start({ x: 0, y: 0 })
-		.vertical(1)
-		.horizontal(25)
-		.cubic({ x: 50, y: 50 }, { x: 50, y: 0 }, { x: -50, y: 0 })
-		.horizontal(25)
-		.quadratic({ x: 50, y: 50 }, { x: 50, y: 0 })
 		.vertical(50)
-		.diagonal({ x: 50, y: 50 })
-		.diagonal({ x: 50, y: -50 })
+		.horizontal(500)
 		.vertical(-50)
 
 	const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
 	svg.setAttribute("id", "svg")
-	svg.setAttribute("width", "500")
-	svg.setAttribute("height", "500")
-	svg.setAttribute("viewBox", "0 0 500 500")
-	svg.setAttribute("xmlns", "w3.org/2000/svg")
+	svg.setAttribute("width", "502") // 500 + borderWidth * 0.5
+	svg.setAttribute("height", "502")
+	svg.setAttribute("viewBox", "-1 -1 502 502") // -borderWidth * 0.5
 	svg.append(path.toElement())
 
 	document.querySelector("#result")?.append(svg)
 </script>
 
 <style>
-	#result {
-		margin: 2rem 2rem;
+	.grid {
+		width: fit-content;
+		box-shadow: 0 0 0 1px black;
+		margin: 2rem;
+		display: grid;
+		grid-template: repeat(10, 40px) / repeat(10, 40px);
 	}
-	#svg {
+
+	#start {
+		background: lightgreen;
+	}
+
+	#end {
+		background: salmon;
+	}
+
+	#result {
+		margin: 2rem;
+	}
+	#result > svg {
 		display: block;
 		box-shadow: 0 0 0 1px black;
 	}
