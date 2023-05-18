@@ -1,10 +1,13 @@
 import Point2d from "@lib/geometry/2d/point2d.class"
 import Vector2d from "@lib/geometry/2d/vector2d.class"
-import PathInternals from "@src/core/path/path-internals.class"
+import PathInternals from "@src/core/path/classes/path-internals.class"
+import NoStartingPoint from "@src/core/path/errors/no-starting-point.error"
+import EmptyVectors from "@src/core/path/errors/empty-vectors.error"
+import StraightVectorProperties from "@src/core/path/classes/straight-vector-properties.class"
+import CubicVectorProperties from "@src/core/path/classes/cubic-vector-properties.class"
+import QuadraticVectorProperties from "@src/core/path/classes/quadratic-vector-properties.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type { Coordinates2dGetter, LengthGetter } from "@src/core/path/types"
-import SegmentType from "@src/core/path/enums/segment-type.enum"
-
 /*
 
 movements = [
@@ -55,6 +58,40 @@ class Path {
 	// 	return path
 	// }
 
+	toElement() {
+		if (!this.internals.start) throw new NoStartingPoint()
+
+		const startingPoint = this.internals.start()
+		const [first, ...rest] = this.internals.vectorProperties
+
+		if (!first) throw new EmptyVectors()
+
+		const firstTranslated = first
+			.clone()
+			.translate(startingPoint.x, startingPoint.y)
+
+		let d = firstTranslated.toSegment(true)
+
+		let lastHead = firstTranslated.getDisplacement().head
+		for (const vectorProperties of rest) {
+			const nextTranslated = vectorProperties
+				.clone()
+				.translate(lastHead.x, lastHead.y)
+			lastHead = nextTranslated.getDisplacement().head
+			d += ` ${nextTranslated.toSegment()}`
+		}
+
+		const path = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"path",
+		)
+		path.setAttribute("d", d)
+		path.setAttribute("fill", "none")
+		path.setAttribute("stroke", "black")
+		path.setAttribute("stroke-width", "2")
+		return path
+	}
+
 	start(startingPoint: Coordinates2d | Coordinates2dGetter | null) {
 		if (startingPoint) {
 			this.internals.start =
@@ -72,31 +109,33 @@ class Path {
 
 	horizontal(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
-		this.internals.vectors.push({
-			type: SegmentType.Straight,
-			getDisplacement: () => Vector2d.fromCoordinates(getLength(), 0),
-		})
+		this.internals.vectorProperties.push(
+			new StraightVectorProperties(() =>
+				Vector2d.fromCoordinates(getLength(), 0),
+			),
+		)
+
 		return this
 	}
 
 	vertical(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
-		this.internals.vectors.push({
-			type: SegmentType.Straight,
-			getDisplacement: () => Vector2d.fromCoordinates(0, getLength()),
-		})
+		this.internals.vectorProperties.push(
+			new StraightVectorProperties(() =>
+				Vector2d.fromCoordinates(0, getLength()),
+			),
+		)
 		return this
 	}
 
 	diagonal(length: Coordinates2d | Coordinates2dGetter) {
 		const getLength = this.#getterize(length)
-		this.internals.vectors.push({
-			type: SegmentType.Straight,
-			getDisplacement: () => {
+		this.internals.vectorProperties.push(
+			new StraightVectorProperties(() => {
 				const { x, y } = getLength()
 				return Vector2d.fromCoordinates(x, y)
-			},
-		})
+			}),
+		)
 		return this
 	}
 
@@ -108,21 +147,29 @@ class Path {
 		const getLength = this.#getterize(length)
 		const getStartControl = this.#getterize(startControl)
 		const getEndControl = this.#getterize(endControl)
-		this.internals.vectors.push({
-			type: SegmentType.Cubic,
-			getDisplacement: () => {
-				const { x, y } = getLength()
-				return Vector2d.fromCoordinates(x, y)
-			},
-			getStartControl: () => {
-				const { x, y } = getStartControl()
-				return Vector2d.fromCoordinates(x, y)
-			},
-			getEndControl: () => {
-				const { x, y } = getEndControl()
-				return Vector2d.fromCoordinates(x, y)
-			},
-		})
+		this.internals.vectorProperties.push(
+			new CubicVectorProperties(
+				() => {
+					const { x, y } = getLength()
+					return Vector2d.fromCoordinates(x, y)
+				},
+				() => {
+					const { x, y } = getStartControl()
+					return Vector2d.fromCoordinates(x, y)
+				},
+				() => {
+					const length = getLength()
+					const endControl = getEndControl()
+					return new Vector2d(
+						new Point2d(
+							length.x + endControl.x,
+							length.y + endControl.y,
+						),
+						length,
+					)
+				},
+			),
+		)
 		return this
 	}
 
@@ -132,18 +179,25 @@ class Path {
 	) {
 		const getLength = this.#getterize(length)
 		const getControl = this.#getterize(control)
-		this.internals.vectors.push({
-			type: SegmentType.Quadratic,
-			getDisplacement: () => {
-				const { x, y } = getLength()
-				return Vector2d.fromCoordinates(x, y)
-			},
-			getControl: () => {
-				const { x, y } = getControl()
-				return Vector2d.fromCoordinates(x, y)
-			},
-		})
+		this.internals.vectorProperties.push(
+			new QuadraticVectorProperties(
+				() => {
+					const { x, y } = getLength()
+					return Vector2d.fromCoordinates(x, y)
+				},
+				() => {
+					const { x, y } = getControl()
+					return Vector2d.fromCoordinates(x, y)
+				},
+			),
+		)
 		return this
+	}
+
+	clone() {
+		const path = new Path()
+		path.internals = this.internals.clone()
+		return path
 	}
 
 	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {
@@ -169,12 +223,6 @@ class Path {
 	// 	this.#addMovement(this.#toLengthGetter(length), Vector2d.LEFT)
 	// 	return this
 	// }
-
-	clone() {
-		const path = new Path()
-		path.internals = this.internals.clone()
-		return path
-	}
 
 	// toString() {
 	// 	return this.get()

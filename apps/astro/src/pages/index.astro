@@ -59,7 +59,23 @@ import Layout from "../layouts/Layout.astro"
 				stroke="black"
 				fill="none"></path>
 		</svg>
+
+		<!-- <svg
+			id="svg"
+			width="500"
+			height="500"
+			viewBox="0 0 500 500"
+			xmlns="w3.org/2000/svg"
+		>
+			 <path
+				d="M0 0 L0 10 L10 10"
+				stroke-width="2"
+				stroke="black"
+				fill="none"></path> 
+		</svg> -->
 	</section>
+
+	<section id="result"></section>
 
 	<section>
 		<div class="angle"></div>
@@ -73,21 +89,39 @@ import Layout from "../layouts/Layout.astro"
 </Layout>
 
 <script>
-	// import { Path } from "pathcrafter"
+	import { Path } from "pathcrafter"
 
-	// const path = new Path()
-	// 	.setStart({ x: 1, y: 1 })
-	// 	.bottom(10)
-	// 	.right(70)
-	// 	.top(20)
-	// 	.left(() => 40)
-	// 	.top(() => 50)
-	// 	.right(20)
+	const path = new Path()
+		.start({ x: 0, y: 0 })
+		.vertical(1)
+		.horizontal(25)
+		.cubic({ x: 50, y: 50 }, { x: 50, y: 0 }, { x: -50, y: 0 })
+		.horizontal(25)
+		.quadratic({ x: 50, y: 50 }, { x: 50, y: 0 })
+		.vertical(50)
+		.diagonal({ x: 50, y: 50 })
+		.diagonal({ x: 50, y: -50 })
+		.vertical(-50)
 
-	// console.log(path.toString())
+	const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+	svg.setAttribute("id", "svg")
+	svg.setAttribute("width", "500")
+	svg.setAttribute("height", "500")
+	svg.setAttribute("viewBox", "0 0 500 500")
+	svg.setAttribute("xmlns", "w3.org/2000/svg")
+	svg.append(path.toElement())
+
+	document.querySelector("#result")?.append(svg)
 </script>
 
 <style>
+	#result {
+		margin: 2rem 2rem;
+	}
+	#svg {
+		display: block;
+		box-shadow: 0 0 0 1px black;
+	}
 	.angle {
 		height: 50px;
 		width: 50px;

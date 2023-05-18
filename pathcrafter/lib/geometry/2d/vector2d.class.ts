@@ -1,5 +1,6 @@
 import Line2d from "@lib/geometry/2d/line2d.class"
 import Point2d from "@lib/geometry/2d/point2d.class"
+import type { Coordinates2d } from "@lib/geometry/2d/types"
 import ZeroDivision from "@lib/geometry/errors/zero-division.error"
 
 class Vector2d {
@@ -19,7 +20,14 @@ class Vector2d {
 
 	static BOTTOM_LEFT = Object.freeze(Vector2d.fromCoordinates(-1, 1))
 
-	constructor(public head: Point2d, public tail = new Point2d(0, 0)) {}
+	head: Point2d
+
+	tail: Point2d
+
+	constructor(head: Coordinates2d, tail: Coordinates2d = new Point2d(0, 0)) {
+		this.head = new Point2d(head.x, head.y)
+		this.tail = new Point2d(tail.x, tail.y)
+	}
 
 	static fromCoordinates(headX: number, headY: number, tailX = 0, tailY = 0) {
 		return new Vector2d(
@@ -40,6 +48,14 @@ class Vector2d {
 		const x = this.head.x - this.tail.x
 		const y = this.head.y - this.tail.y
 		return Math.sqrt(x * x + y * y)
+	}
+
+	add({ head, tail }: Vector2d) {
+		this.head.x += head.x
+		this.head.y += head.y
+		this.tail.x += tail.x
+		this.tail.y += tail.y
+		return this
 	}
 
 	equals({ head, tail }: Vector2d) {
