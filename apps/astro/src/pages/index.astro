@@ -49,7 +49,7 @@ import Layout from "../layouts/Layout.astro"
 	svg.setAttribute("width", "502") // 500 + borderWidth * 0.5
 	svg.setAttribute("height", "502")
 	svg.setAttribute("viewBox", "-1 -1 502 502") // -borderWidth * 0.5
-	svg.append(path.toElement())
+	svg.append(path.updateElement())
 
 	document.querySelector("#result")?.append(svg)
 </script>

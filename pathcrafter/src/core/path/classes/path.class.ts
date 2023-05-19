@@ -1,16 +1,35 @@
 import Point2d from "@lib/geometry/2d/point2d.class"
 import Vector2d from "@lib/geometry/2d/vector2d.class"
 import PathInternals from "@src/core/path/classes/path-internals.class"
-import NoStartingPoint from "@src/core/path/errors/no-starting-point.error"
-import StraightVectorProperties from "@src/core/path/classes/straight-vector-properties.class"
-import CubicVectorProperties from "@src/core/path/classes/cubic-vector-properties.class"
-import QuadraticVectorProperties from "@src/core/path/classes/quadratic-vector-properties.class"
+import StraightVectorProperties from "@src/core/path/classes/vector-properties/straight-vector-properties.class"
+import CubicVectorProperties from "@src/core/path/classes/vector-properties/cubic-vector-properties.class"
+import QuadraticVectorProperties from "@src/core/path/classes/vector-properties/quadratic-vector-properties.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
-import type { Coordinates2dGetter, LengthGetter } from "@src/core/path/types"
-import type { PathInternalsVectorProperties } from "@src/core/path/classes/path-internals.class"
+import type {
+	Coordinates2dGetter,
+	LengthGetter,
+	PathStyle,
+} from "@src/core/path/types"
+import { SVG_NAMESPACE } from "@src/constants"
 
 class Path {
 	internals = new PathInternals()
+
+	style: PathStyle = {
+		fill: "none",
+		stroke: "none",
+		strokeWidth: 2,
+	}
+
+	#element
+
+	constructor(style: Partial<PathStyle> = {}) {
+		this.style = { ...this.style, ...style }
+
+		const g = document.createElementNS(SVG_NAMESPACE, "g")
+		g.append(document.createElementNS(SVG_NAMESPACE, "path"))
+		this.#element = g
+	}
 
 	start(startingPoint: Coordinates2d | Coordinates2dGetter | null) {
 		if (startingPoint) {
@@ -29,7 +48,7 @@ class Path {
 
 	horizontal(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
-		this.internals.vectorProperties.push(
+		this.internals.vectors.push(
 			new StraightVectorProperties(() =>
 				Vector2d.fromCoordinates(getLength(), 0),
 			),
@@ -40,7 +59,7 @@ class Path {
 
 	vertical(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
-		this.internals.vectorProperties.push(
+		this.internals.vectors.push(
 			new StraightVectorProperties(() =>
 				Vector2d.fromCoordinates(0, getLength()),
 			),
@@ -50,7 +69,7 @@ class Path {
 
 	diagonal(length: Coordinates2d | Coordinates2dGetter) {
 		const getLength = this.#getterize(length)
-		this.internals.vectorProperties.push(
+		this.internals.vectors.push(
 			new StraightVectorProperties(() => {
 				const { x, y } = getLength()
 				return Vector2d.fromCoordinates(x, y)
@@ -67,7 +86,7 @@ class Path {
 		const getLength = this.#getterize(length)
 		const getStartControl = this.#getterize(startControl)
 		const getEndControl = this.#getterize(endControl)
-		this.internals.vectorProperties.push(
+		this.internals.vectors.push(
 			new CubicVectorProperties(
 				() => {
 					const { x, y } = getLength()
@@ -99,7 +118,7 @@ class Path {
 	) {
 		const getLength = this.#getterize(length)
 		const getControl = this.#getterize(control)
-		this.internals.vectorProperties.push(
+		this.internals.vectors.push(
 			new QuadraticVectorProperties(
 				() => {
 					const { x, y } = getLength()
@@ -120,61 +139,31 @@ class Path {
 		return path
 	}
 
-	toElement() {
+	updateElement() {
 		let d = ""
 
-		this.#forEachTranslatedVectorProperties((vectorProperties, i) => {
+		this.internals.forEachTranslatedVector((vector, i) => {
 			if (i === 0) {
-				d += vectorProperties.toSegment(true)
+				d += vector.toSegment(true)
 				return
 			}
-			d += ` ${vectorProperties.toSegment()}`
+			d += ` ${vector.toSegment()}`
 		})
 
-		const path = document.createElementNS(
-			"http://www.w3.org/2000/svg",
-			"path",
-		)
-		path.setAttribute("d", d)
-		path.setAttribute("fill", "none")
-		path.setAttribute("stroke", "black")
-		path.setAttribute("stroke-width", "2")
-		return path
-	}
+		this.#setElementAttribute("d", d)
+			.#setElementAttribute("stroke", this.style.stroke)
+			.#setElementAttribute("stroke-width", this.style.strokeWidth)
 
-	#forEachTranslatedVectorProperties(
-		callback: (
-			vectorProperties: PathInternalsVectorProperties,
-			index: number,
-		) => any,
-	) {
-		if (!this.internals.start) throw new NoStartingPoint()
-
-		const [first, ...vectorProperties] = this.internals.vectorProperties
-		if (!first) return
-
-		const startingPoint = this.internals.start()
-		const translatedFirst = first
-			.clone()
-			.translate(startingPoint.x, startingPoint.y)
-
-		callback(translatedFirst, 0)
-
-		let lastTranslatedHead = translatedFirst.getDisplacement().head
-
-		for (const [i, item] of vectorProperties.entries()) {
-			const translated = item
-				.clone()
-				.translate(lastTranslatedHead.x, lastTranslatedHead.y)
-
-			lastTranslatedHead = translated.getDisplacement().head
-
-			callback(translated, i + 1)
-		}
+		return this.#element
 	}
 
 	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {
 		return typeof value === "function" ? (value as U) : () => value
+	}
+
+	#setElementAttribute(key: string, value: string | number) {
+		this.#element.setAttribute(key, `${value}`)
+		return this
 	}
 }
 
