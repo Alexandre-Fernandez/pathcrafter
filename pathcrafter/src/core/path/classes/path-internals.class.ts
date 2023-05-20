@@ -1,3 +1,5 @@
+import Point2d from "@lib/geometry/2d/point2d.class"
+import EmptyVectors from "@src/core/path/errors/empty-vectors.error"
 import NoStartingPoint from "@src/core/path/errors/no-starting-point.error"
 import type { Point2dGetter, VectorProperties } from "@src/core/path/types"
 
@@ -33,6 +35,42 @@ class PathInternals {
 			lastTranslatedHead = translated.getDisplacement().head
 
 			callback(translated, i + 1)
+		}
+	}
+
+	getParallel(gap: number) {
+		const parallel = new PathInternals()
+		parallel.start = this.#getParallelStart(gap)
+
+		this.forEachTranslatedVector((vector) => {
+			//
+		})
+
+		return parallel
+	}
+
+	/** "Perpendicular point" to the starting point spaced by `gap` */
+	#getParallelStart(gap: number): Point2dGetter {
+		return () => {
+			if (!this.start) throw new NoStartingPoint()
+
+			const startingPoint = this.start()
+			const firstVector = this.vectors
+				.at(0)
+				?.getDisplacement()
+				.clone()
+				.translate(startingPoint.x, startingPoint.y)
+
+			if (!firstVector) throw new EmptyVectors()
+
+			const length = firstVector.length()
+
+			return new Point2d(
+				startingPoint.x -
+					(gap * (firstVector.head.y - startingPoint.y)) / length,
+				startingPoint.y +
+					(gap * (firstVector.head.x - startingPoint.x)) / length,
+			)
 		}
 	}
 

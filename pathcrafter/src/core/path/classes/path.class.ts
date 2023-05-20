@@ -9,6 +9,7 @@ import type {
 	Coordinates2dGetter,
 	LengthGetter,
 	PathStyle,
+	VectorProperties,
 } from "@src/core/path/types"
 import { SVG_NAMESPACE } from "@src/constants"
 
@@ -155,6 +156,30 @@ class Path {
 			.#setElementAttribute("stroke-width", this.style.strokeWidth)
 
 		return this.#element
+	}
+
+	parallel(gap: number) {
+		const parallelVectors: VectorProperties[] = []
+
+		/*
+			c(
+				xa - ( ( ac * (yb - ya) ) / ab ),
+				ya + ( ( ac * (xb - xa) ) / ab )
+			)
+		*/
+
+		let start = new Point2d(0, 0)
+		let previous: VectorProperties | null = null
+		this.internals.forEachTranslatedVector((vector, i) => {
+			if (i === 0) return // figure out direction to get perpendicular and figure out starting point
+			previous = vector
+		})
+
+		if (parallelVectors.length === 0 && this.internals.vectors[0]) {
+			parallelVectors.push(this.internals.vectors[0])
+		}
+
+		console.log(previous, parallelVectors)
 	}
 
 	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {
