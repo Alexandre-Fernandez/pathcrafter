@@ -40,60 +40,6 @@ class PathInternals {
 		}
 	}
 
-	getParallel(gap: number) {
-		const parallel = new PathInternals()
-		parallel.start = this.#getParallelStart(gap)
-
-		let previousVector: VectorProperties | null = null
-		this.forEachTranslatedVector((vector) => {
-			const getDisplacement = () => {
-				if (!previousVector) throw new ParallelPreviousDisplacement()
-				const previous = previousVector.getDisplacement()
-
-				const combined = new Vector2d(
-					previous.tail,
-					vector.getDisplacement().head,
-				).toLine2d()
-
-				if (combined.intersects(previous.toLine2d())) {
-					// if they intersect we substract the gap to the length
-					return ""
-				}
-
-				return previous
-			}
-
-			previousVector = vector
-		})
-
-		return parallel
-	}
-
-	/** "Perpendicular point" to the starting point spaced by `gap` */
-	#getParallelStart(gap: number): Point2dGetter {
-		return () => {
-			if (!this.start) throw new NoStartingPoint()
-
-			const startingPoint = this.start()
-			const firstVector = this.vectors
-				.at(0)
-				?.getDisplacement()
-				.clone()
-				.translate(startingPoint.x, startingPoint.y)
-
-			if (!firstVector) throw new EmptyVectors()
-
-			const length = firstVector.length()
-
-			return new Point2d(
-				startingPoint.x -
-					(gap * (firstVector.head.y - startingPoint.y)) / length,
-				startingPoint.y +
-					(gap * (firstVector.head.x - startingPoint.x)) / length,
-			)
-		}
-	}
-
 	clone() {
 		const internals = new PathInternals()
 		internals.vectors = [...this.vectors]
