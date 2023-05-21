@@ -32,6 +32,8 @@ class PathInternals {
 
 			lastTranslatedHead = translated.getDisplacement().head
 
+			// TRANSLATE WITH GETTERS INSTEAD OF HARD CODE
+
 			callback(translated, i + 1)
 		}
 	}
