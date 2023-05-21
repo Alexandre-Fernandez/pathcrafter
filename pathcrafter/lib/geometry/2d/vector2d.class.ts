@@ -44,6 +44,25 @@ class Vector2d {
 		return this
 	}
 
+	/** Translates the vector along its perpendicular by `length`. */
+	perpendicularTranslate(length: number) {
+		const magnitude = this.length()
+
+		const tail = new Point2d(
+			this.tail.x - (length * (this.head.y - this.tail.y)) / magnitude,
+			this.tail.y + (length * (this.head.x - this.tail.x)) / magnitude,
+		)
+		const head = new Point2d(
+			this.head.x - (length * (this.head.y - this.tail.y)) / magnitude,
+			this.head.y + (length * (this.head.x - this.tail.x)) / magnitude,
+		)
+
+		this.tail = tail
+		this.head = head
+
+		return this
+	}
+
 	length() {
 		const x = this.head.x - this.tail.x
 		const y = this.head.y - this.tail.y
