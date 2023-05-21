@@ -1,8 +1,4 @@
-import Point2d from "@lib/geometry/2d/point2d.class"
-import Vector2d from "@lib/geometry/2d/vector2d.class"
-import EmptyVectors from "@src/core/path/errors/empty-vectors.error"
 import NoStartingPoint from "@src/core/path/errors/no-starting-point.error"
-import ParallelPreviousDisplacement from "@src/core/path/errors/parallel-previous-displacement.error"
 import type { Point2dGetter, VectorProperties } from "@src/core/path/types"
 
 class PathInternals {
