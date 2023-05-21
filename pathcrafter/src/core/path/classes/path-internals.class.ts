@@ -32,6 +32,8 @@ class PathInternals {
 
 			lastTranslatedHead = translated.getDisplacement().head
 
+			// TODO: translate cubic and quadratic
+
 			callback(translated, i + 1)
 		}
 	}
