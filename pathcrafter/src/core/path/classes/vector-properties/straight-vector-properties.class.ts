@@ -23,8 +23,36 @@ class StraightVectorProperties {
 			: `L${head.x} ${head.y}`
 	}
 
+	toGapped(gap: number, nextVector?: Vector2dGetter) {
+		const getParallelVector = () =>
+			this.getDisplacement.bind({})().perpendicularTranslate(gap)
+
+		if (!nextVector) {
+			return new StraightVectorProperties(getParallelVector)
+		}
+
+		const getParallelIntersection = () =>
+			getParallelVector()
+				.toLine2d()
+				.intersects(
+					nextVector().clone().perpendicularTranslate(gap).toLine2d(),
+				)
+
+		return new StraightVectorProperties(() => {
+			const parallel = getParallelVector()
+			const intersection = getParallelIntersection()
+
+			if (intersection) {
+				parallel.head = intersection
+				return parallel
+			}
+
+			return parallel // no intersection, this and nextVector are parallel
+		})
+	}
+
 	clone() {
-		return new StraightVectorProperties(this.getDisplacement)
+		return new StraightVectorProperties(this.getDisplacement.bind({}))
 	}
 }
 

@@ -38,8 +38,8 @@ class QuadraticVectorProperties extends StraightVectorProperties {
 
 	override clone() {
 		return new QuadraticVectorProperties(
-			this.getDisplacement,
-			this.getControl,
+			this.getDisplacement.bind({}),
+			this.getControl.bind({}),
 		)
 	}
 }

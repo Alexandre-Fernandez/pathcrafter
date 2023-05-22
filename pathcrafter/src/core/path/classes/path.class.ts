@@ -31,7 +31,7 @@ class Path {
 		this.#element = g
 	}
 
-	start(startingPoint: Coordinates2d | Coordinates2dGetter | null) {
+	setStart(startingPoint: Coordinates2d | Coordinates2dGetter | null) {
 		if (startingPoint) {
 			this.internals.start =
 				typeof startingPoint === "function"
@@ -46,7 +46,7 @@ class Path {
 		return this
 	}
 
-	horizontal(length: number | LengthGetter) {
+	addHorizontal(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
 		this.internals.vectors.push(
 			new StraightVectorProperties(() =>
@@ -57,7 +57,7 @@ class Path {
 		return this
 	}
 
-	vertical(length: number | LengthGetter) {
+	addVertical(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
 		this.internals.vectors.push(
 			new StraightVectorProperties(() =>
@@ -67,7 +67,7 @@ class Path {
 		return this
 	}
 
-	diagonal(length: Coordinates2d | Coordinates2dGetter) {
+	addDiagonal(length: Coordinates2d | Coordinates2dGetter) {
 		const getLength = this.#getterize(length)
 		this.internals.vectors.push(
 			new StraightVectorProperties(() => {
@@ -78,7 +78,7 @@ class Path {
 		return this
 	}
 
-	cubic(
+	addCubic(
 		length: Coordinates2d | Coordinates2dGetter,
 		startControl: Coordinates2d | Coordinates2dGetter,
 		endControl: Coordinates2d | Coordinates2dGetter,
@@ -112,7 +112,7 @@ class Path {
 		return this
 	}
 
-	quadratic(
+	addQuadratic(
 		length: Coordinates2d | Coordinates2dGetter,
 		control: Coordinates2d | Coordinates2dGetter,
 	) {
@@ -137,6 +137,10 @@ class Path {
 		const path = new Path()
 		path.internals = this.internals.clone()
 		return path
+	}
+
+	getElement() {
+		return this.#element
 	}
 
 	updateElement() {

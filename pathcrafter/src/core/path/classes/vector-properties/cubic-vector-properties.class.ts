@@ -44,9 +44,9 @@ class CubicVectorProperties extends StraightVectorProperties {
 
 	override clone() {
 		return new CubicVectorProperties(
-			this.getDisplacement,
-			this.getStartControl,
-			this.getEndControl,
+			this.getDisplacement.bind({}),
+			this.getStartControl.bind({}),
+			this.getEndControl.bind({}),
 		)
 	}
 }
