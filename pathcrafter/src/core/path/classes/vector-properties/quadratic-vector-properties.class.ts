@@ -1,5 +1,6 @@
+import type { Coordinates2d } from "@lib/geometry/2d/types"
 import StraightVectorProperties from "@src/core/path/classes/vector-properties/straight-vector-properties.class"
-import type { Vector2dGetter } from "@src/core/path/types"
+import type { Coordinates2dGetter, Vector2dGetter } from "@src/core/path/types"
 
 class QuadraticVectorProperties extends StraightVectorProperties {
 	constructor(
@@ -9,15 +10,18 @@ class QuadraticVectorProperties extends StraightVectorProperties {
 		super(getDisplacement)
 	}
 
-	override translate(x: number, y: number) {
-		const displacementClone = this.getDisplacement.bind({})
+	override translate(translation: Coordinates2d | Coordinates2dGetter) {
+		const translationGetter =
+			typeof translation === "function" ? translation : () => translation
+
 		this.getDisplacement = () => {
-			return displacementClone().translate(x, y)
+			const { x, y } = translationGetter()
+			return this.getDisplacement.bind({})().translate(x, y)
 		}
 
-		const controlClone = this.getControl.bind({})
 		this.getControl = () => {
-			return controlClone().translate(x, y)
+			const { x, y } = translationGetter()
+			return this.getControl.bind({})().translate(x, y)
 		}
 
 		return this

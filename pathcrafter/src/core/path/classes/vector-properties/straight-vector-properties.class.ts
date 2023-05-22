@@ -1,12 +1,16 @@
-import type { Vector2dGetter } from "@src/core/path/types"
+import type { Coordinates2d } from "@lib/geometry/2d/types"
+import type { Coordinates2dGetter, Vector2dGetter } from "@src/core/path/types"
 
 class StraightVectorProperties {
 	constructor(public getDisplacement: Vector2dGetter) {}
 
-	translate(x: number, y: number) {
-		const displacementClone = this.getDisplacement.bind({})
+	translate(translation: Coordinates2d | Coordinates2dGetter) {
+		const translationGetter =
+			typeof translation === "function" ? translation : () => translation
+
 		this.getDisplacement = () => {
-			return displacementClone().translate(x, y)
+			const { x, y } = translationGetter()
+			return this.getDisplacement.bind({})().translate(x, y)
 		}
 
 		return this

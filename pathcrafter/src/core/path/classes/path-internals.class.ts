@@ -16,23 +16,15 @@ class PathInternals {
 		const [first, ...vectorProperties] = this.vectors
 		if (!first) return
 
-		const startingPoint = this.start()
-		const translatedFirst = first
-			.clone()
-			.translate(startingPoint.x, startingPoint.y)
+		const translatedFirst = first.clone().translate(this.start)
 
 		callback(translatedFirst, 0)
 
-		let lastTranslatedHead = translatedFirst.getDisplacement().head
-
+		let previousHeadGetter = () => translatedFirst.getDisplacement().head
 		for (const [i, item] of vectorProperties.entries()) {
-			const translated = item
-				.clone()
-				.translate(lastTranslatedHead.x, lastTranslatedHead.y)
+			const translated = item.clone().translate(previousHeadGetter)
 
-			lastTranslatedHead = translated.getDisplacement().head
-
-			// TRANSLATE WITH GETTERS INSTEAD OF HARD CODE
+			previousHeadGetter = () => translated.getDisplacement().head
 
 			callback(translated, i + 1)
 		}
