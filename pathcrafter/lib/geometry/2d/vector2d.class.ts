@@ -77,6 +77,14 @@ class Vector2d {
 		return this
 	}
 
+	substract({ head, tail }: Vector2d) {
+		this.head.x -= head.x
+		this.head.y -= head.y
+		this.tail.x -= tail.x
+		this.tail.y -= tail.y
+		return this
+	}
+
 	equals({ head, tail }: Vector2d) {
 		return (
 			this.head.x - this.tail.x - (head.x - tail.x) === 0 &&

@@ -42,6 +42,63 @@ class CubicVectorProperties extends StraightVectorProperties {
 			: `C${startControl.x} ${startControl.y},${endControl.x} ${endControl.y},${head.x} ${head.y}`
 	}
 
+	override toGapped(
+		gap: number,
+		nextVector?: Vector2dGetter,
+	): CubicVectorProperties {
+		const getParallelVector = () =>
+			this.getDisplacement().perpendicularTranslate(gap)
+
+		const getParallelStartControl = () => {
+			const { tail: translation } = getParallelVector().substract(
+				this.getDisplacement(),
+			)
+			return this.getStartControl().translate(
+				translation.x,
+				translation.y,
+			)
+		}
+
+		const getParallelEndControl = () => {
+			const { head: translation } = getParallelVector().substract(
+				this.getDisplacement(),
+			)
+			return this.getEndControl().translate(translation.x, translation.y)
+		}
+
+		if (!nextVector) {
+			return new CubicVectorProperties(
+				getParallelVector,
+				getParallelStartControl,
+				getParallelEndControl,
+			)
+		}
+
+		// intersection between the gap spaced parallels of this and next vector
+		const getParallelIntersection = () =>
+			getParallelVector()
+				.toLine2d()
+				.intersects(
+					nextVector().clone().perpendicularTranslate(gap).toLine2d(),
+				)
+
+		return new CubicVectorProperties(
+			() => {
+				const parallel = getParallelVector()
+				const intersection = getParallelIntersection()
+
+				if (intersection) {
+					parallel.head = intersection
+					return parallel
+				}
+
+				return parallel // no intersection, this and nextVector are parallel
+			},
+			getParallelStartControl,
+			getParallelEndControl,
+		)
+	}
+
 	override clone() {
 		return new CubicVectorProperties(
 			this.getDisplacement.bind({}),

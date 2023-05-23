@@ -36,6 +36,48 @@ class QuadraticVectorProperties extends StraightVectorProperties {
 			: `Q${control.x} ${control.y},${head.x} ${head.y}`
 	}
 
+	override toGapped(
+		gap: number,
+		nextVector?: Vector2dGetter,
+	): QuadraticVectorProperties {
+		const getParallelVector = () =>
+			this.getDisplacement().perpendicularTranslate(gap)
+
+		const getParallelControl = () => {
+			const { tail: translation } = getParallelVector().substract(
+				this.getDisplacement(),
+			)
+			return this.getControl().translate(translation.x, translation.y)
+		}
+
+		if (!nextVector) {
+			return new QuadraticVectorProperties(
+				getParallelVector,
+				getParallelControl,
+			)
+		}
+
+		// intersection between the gap spaced parallels of this and next vector
+		const getParallelIntersection = () =>
+			getParallelVector()
+				.toLine2d()
+				.intersects(
+					nextVector().clone().perpendicularTranslate(gap).toLine2d(),
+				)
+
+		return new QuadraticVectorProperties(() => {
+			const parallel = getParallelVector()
+			const intersection = getParallelIntersection()
+
+			if (intersection) {
+				parallel.head = intersection
+				return parallel
+			}
+
+			return parallel // no intersection, this and nextVector are parallel
+		}, getParallelControl)
+	}
+
 	override clone() {
 		return new QuadraticVectorProperties(
 			this.getDisplacement.bind({}),

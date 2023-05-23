@@ -23,14 +23,18 @@ class StraightVectorProperties {
 			: `L${head.x} ${head.y}`
 	}
 
-	toGapped(gap: number, nextVector?: Vector2dGetter) {
+	toGapped(
+		gap: number,
+		nextVector?: Vector2dGetter,
+	): StraightVectorProperties {
 		const getParallelVector = () =>
-			this.getDisplacement.bind({})().perpendicularTranslate(gap)
+			this.getDisplacement().perpendicularTranslate(gap)
 
 		if (!nextVector) {
 			return new StraightVectorProperties(getParallelVector)
 		}
 
+		// intersection between the gap spaced parallels of this and next vector
 		const getParallelIntersection = () =>
 			getParallelVector()
 				.toLine2d()
