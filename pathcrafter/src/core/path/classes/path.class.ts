@@ -21,14 +21,17 @@ class Path {
 		strokeWidth: 2,
 	}
 
-	#element
+	#groupEl
+
+	#pathEl
 
 	constructor(style: Partial<PathStyle> = {}) {
 		this.style = { ...this.style, ...style }
 
 		const g = document.createElementNS(SVG_NAMESPACE, "g")
-		g.append(document.createElementNS(SVG_NAMESPACE, "path"))
-		this.#element = g
+		this.#pathEl = document.createElementNS(SVG_NAMESPACE, "path")
+		g.append(this.#pathEl)
+		this.#groupEl = g
 	}
 
 	setStart(startingPoint: Coordinates2d | Coordinates2dGetter | null) {
@@ -140,7 +143,7 @@ class Path {
 	}
 
 	getElement() {
-		return this.#element
+		return this.#groupEl
 	}
 
 	updateElement() {
@@ -154,19 +157,39 @@ class Path {
 			d += ` ${vector.toSegment()}`
 		})
 
-		this.#setElementAttribute("d", d)
-			.#setElementAttribute("stroke", this.style.stroke)
-			.#setElementAttribute("stroke-width", this.style.strokeWidth)
+		this.#setElementAttribute("path", "d", d)
+			.#setElementAttribute("path", "stroke", this.style.stroke)
+			.#setElementAttribute(
+				"path",
+				"stroke-width",
+				this.style.strokeWidth,
+			)
 
-		return this.#element
+		return this.#groupEl
 	}
 
 	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {
 		return typeof value === "function" ? (value as U) : () => value
 	}
 
-	#setElementAttribute(key: string, value: string | number) {
-		this.#element.setAttribute(key, `${value}`)
+	#setElementAttribute(
+		el: "g" | "path",
+		key: string,
+		value: string | number,
+	) {
+		switch (el) {
+			case "g": {
+				this.#groupEl.setAttribute(key, `${value}`)
+				break
+			}
+			case "path": {
+				this.#pathEl.setAttribute(key, `${value}`)
+				break
+			}
+			default: {
+				break
+			}
+		}
 		return this
 	}
 }
