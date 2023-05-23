@@ -45,9 +45,24 @@ class CubicVectorProperties extends StraightVectorProperties {
 	override toGapped(
 		gap: number,
 		nextVector?: Vector2dGetter,
+		previousVector?: Vector2dGetter,
 	): CubicVectorProperties {
-		const getParallelVector = () =>
-			this.getDisplacement().perpendicularTranslate(gap)
+		const getParallelVector = () => {
+			const parallel = this.getDisplacement().perpendicularTranslate(gap)
+			if (!previousVector) return parallel
+
+			const intersection = previousVector()
+				.clone()
+				.perpendicularTranslate(gap)
+				.toLine2d()
+				.intersects(parallel.toLine2d())
+
+			if (intersection) {
+				parallel.tail = intersection
+			}
+
+			return parallel
+		}
 
 		const getParallelStartControl = () => {
 			const { tail: translation } = getParallelVector().substract(

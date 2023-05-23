@@ -39,9 +39,24 @@ class QuadraticVectorProperties extends StraightVectorProperties {
 	override toGapped(
 		gap: number,
 		nextVector?: Vector2dGetter,
+		previousVector?: Vector2dGetter,
 	): QuadraticVectorProperties {
-		const getParallelVector = () =>
-			this.getDisplacement().perpendicularTranslate(gap)
+		const getParallelVector = () => {
+			const parallel = this.getDisplacement().perpendicularTranslate(gap)
+			if (!previousVector) return parallel
+
+			const intersection = previousVector()
+				.clone()
+				.perpendicularTranslate(gap)
+				.toLine2d()
+				.intersects(parallel.toLine2d())
+
+			if (intersection) {
+				parallel.tail = intersection
+			}
+
+			return parallel
+		}
 
 		const getParallelControl = () => {
 			const { tail: translation } = getParallelVector().substract(
