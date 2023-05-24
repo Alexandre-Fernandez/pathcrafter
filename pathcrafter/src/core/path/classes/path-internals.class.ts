@@ -30,9 +30,15 @@ class PathInternals {
 		}
 	}
 
+	getTranslatedVectors() {
+		const translatedVectors: VectorProperties[] = []
+		this.forEachTranslatedVector((vector) => translatedVectors.push(vector))
+		return translatedVectors
+	}
+
 	clone() {
 		const internals = new PathInternals()
-		internals.vectors = [...this.vectors]
+		internals.vectors = this.vectors.map((vector) => vector.clone())
 		internals.start = this.start
 		return internals
 	}

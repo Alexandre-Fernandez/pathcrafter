@@ -7,7 +7,11 @@ import CubicVectorProperties from "@src/core/path/classes/vector-properties/cubi
 import QuadraticVectorProperties from "@src/core/path/classes/vector-properties/quadratic-vector-properties.class"
 import { SVG_NAMESPACE } from "@src/constants"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
-import type { Coordinates2dGetter, LengthGetter } from "@src/core/path/types"
+import type {
+	Coordinates2dGetter,
+	LengthGetter,
+	VectorProperties,
+} from "@src/core/path/types"
 
 class Path {
 	internals = new PathInternals()
@@ -135,12 +139,6 @@ class Path {
 		return this
 	}
 
-	clone() {
-		const path = new Path()
-		path.internals = this.internals.clone()
-		return path
-	}
-
 	getElement() {
 		return this.#groupEl
 	}
@@ -159,6 +157,57 @@ class Path {
 		this.#pathEl.setAttribute("d", d)
 
 		return this
+	}
+
+	getParallel(gap: number) {
+		const parallel: VectorProperties[] = []
+
+		const translatedVectors = this.internals.getTranslatedVectors()
+
+		for (const [i, vector] of translatedVectors.entries()) {
+			const lastIndex = translatedVectors.length - 1
+
+			const nextVector = translatedVectors[Math.min(i + 1, lastIndex)]
+			const previousVector = translatedVectors[Math.max(0, i - 1)]
+
+			if (i === 0) {
+				parallel.push(
+					vector.toGapped(
+						gap,
+						undefined,
+						nextVector?.getDisplacement,
+					),
+				)
+				continue
+			}
+
+			if (i === lastIndex) {
+				parallel.push(
+					vector.toGapped(gap, previousVector?.getDisplacement),
+				)
+				continue
+			}
+
+			parallel.push(
+				vector.toGapped(
+					gap,
+					previousVector?.getDisplacement,
+					nextVector?.getDisplacement,
+				),
+			)
+		}
+
+		const path = new Path()
+		path.internals.vectors = parallel
+		path.internals.start = () => parallel[0]!.getDisplacement().tail
+
+		return path
+	}
+
+	clone() {
+		const path = new Path()
+		path.internals = this.internals.clone()
+		return path
 	}
 
 	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {

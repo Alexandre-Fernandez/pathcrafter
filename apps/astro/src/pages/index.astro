@@ -34,7 +34,9 @@ import Layout from "../layouts/Layout.astro"
 		.addQuadratic({ x: 0, y: 200 }, { x: 100, y: 100 })
 		.addDiagonal({ x: -500, y: 500 })
 
-	new Svg([path1])
+	const path2 = path1.getParallel(10)
+
+	new Svg([path1, path2])
 </script>
 
 <style>
