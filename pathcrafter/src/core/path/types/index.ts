@@ -13,13 +13,6 @@ export type Point2dGetter = () => Point2d
 
 export type Coordinates2dGetter = () => Coordinates2d
 
-export interface PathProps {
-	id: string
-	fill: string
-	stroke: string
-	strokeWidth: number | string
-}
-
 export type VectorProperties =
 	| StraightVectorProperties
 	| CubicVectorProperties

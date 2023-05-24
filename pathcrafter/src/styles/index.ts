@@ -1,7 +1,7 @@
 import { PACKAGE_NAME } from "@src/constants"
 
 export const classes = {
-	container: PACKAGE_NAME,
+	container: `_${PACKAGE_NAME}`,
 }
 
 export default `

@@ -15,19 +15,22 @@ class CubicVectorProperties extends StraightVectorProperties {
 		const translationGetter =
 			typeof translation === "function" ? translation : () => translation
 
+		const clonedGetDisplacement = this.getDisplacement.bind({})
 		this.getDisplacement = () => {
 			const { x, y } = translationGetter()
-			return this.getDisplacement.bind({})().translate(x, y)
+			return clonedGetDisplacement().translate(x, y)
 		}
 
+		const clonedGetStartControl = this.getStartControl.bind({})
 		this.getStartControl = () => {
 			const { x, y } = translationGetter()
-			return this.getStartControl.bind({})().translate(x, y)
+			return clonedGetStartControl().translate(x, y)
 		}
 
+		const clonedGetEndControl = this.getEndControl.bind({})
 		this.getEndControl = () => {
 			const { x, y } = translationGetter()
-			return this.getEndControl.bind({})().translate(x, y)
+			return clonedGetEndControl().translate(x, y)
 		}
 
 		return this

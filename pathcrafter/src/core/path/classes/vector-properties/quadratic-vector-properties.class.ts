@@ -14,14 +14,16 @@ class QuadraticVectorProperties extends StraightVectorProperties {
 		const translationGetter =
 			typeof translation === "function" ? translation : () => translation
 
+		const clonedGetDisplacement = this.getDisplacement.bind({})
 		this.getDisplacement = () => {
 			const { x, y } = translationGetter()
-			return this.getDisplacement.bind({})().translate(x, y)
+			return clonedGetDisplacement().translate(x, y)
 		}
 
+		const clonedGetControl = this.getControl.bind({})
 		this.getControl = () => {
 			const { x, y } = translationGetter()
-			return this.getControl.bind({})().translate(x, y)
+			return clonedGetControl().translate(x, y)
 		}
 
 		return this

@@ -24,9 +24,17 @@ import Layout from "../layouts/Layout.astro"
 </Layout>
 
 <script>
-	import { Svg } from "pathcrafter"
+	import { Path, Svg } from "pathcrafter"
 
-	new Svg()
+	const path1 = new Path()
+		.setStart({ x: 400, y: 50 })
+		.addVertical(50)
+		.addHorizontal(400)
+		.addVertical(50)
+		.addQuadratic({ x: 0, y: 200 }, { x: 100, y: 100 })
+		.addDiagonal({ x: -500, y: 500 })
+
+	new Svg([path1])
 
 	// const path = new Path()
 	// 	.start({ x: 0, y: 0 })

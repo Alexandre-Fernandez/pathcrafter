@@ -7,39 +7,25 @@ import CubicVectorProperties from "@src/core/path/classes/vector-properties/cubi
 import QuadraticVectorProperties from "@src/core/path/classes/vector-properties/quadratic-vector-properties.class"
 import { SVG_NAMESPACE } from "@src/constants"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
-import type {
-	Coordinates2dGetter,
-	LengthGetter,
-	PathProps,
-} from "@src/core/path/types"
+import type { Coordinates2dGetter, LengthGetter } from "@src/core/path/types"
 
-class Path implements PathProps {
+class Path {
 	internals = new PathInternals()
 
-	fill = "none"
-
-	stroke = "black"
-
-	strokeWidth: string | number = 1
-
-	#id = generateUniqueId()
+	#id
 
 	#groupEl
 
 	#pathEl
 
-	constructor({ id, fill, stroke, strokeWidth }: Partial<PathProps> = {}) {
-		if (id) this.#id = id
-		if (fill) this.fill = fill
-		if (stroke) this.stroke = stroke
-		if (strokeWidth) this.strokeWidth = strokeWidth
+	constructor(id = generateUniqueId()) {
+		this.#id = id
 
 		this.#pathEl = document.createElementNS(SVG_NAMESPACE, "path")
 
 		this.#groupEl = document.createElementNS(SVG_NAMESPACE, "g")
 		this.#groupEl.id = this.id
 
-		this.#updateAttributes()
 		this.#groupEl.append(this.#pathEl)
 	}
 
@@ -171,15 +157,8 @@ class Path implements PathProps {
 		})
 
 		this.#pathEl.setAttribute("d", d)
-		this.#updateAttributes()
 
 		return this.#groupEl
-	}
-
-	#updateAttributes() {
-		this.#pathEl.setAttribute("fill", this.fill)
-		this.#pathEl.setAttribute("stroke", this.stroke)
-		this.#pathEl.setAttribute("stroke-width", `${this.strokeWidth}`)
 	}
 
 	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {
