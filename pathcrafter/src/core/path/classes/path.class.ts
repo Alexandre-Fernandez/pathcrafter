@@ -158,7 +158,7 @@ class Path {
 
 		this.#pathEl.setAttribute("d", d)
 
-		return this.#groupEl
+		return this
 	}
 
 	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {

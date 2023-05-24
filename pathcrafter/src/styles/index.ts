@@ -7,6 +7,7 @@ export const classes = {
 export default `
 .${classes.container} {
 	position: absolute;
+	pointer-events: none;
 	top: 0;
 	left: 0;
 }

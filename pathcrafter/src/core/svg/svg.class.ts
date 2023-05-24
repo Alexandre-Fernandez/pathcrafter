@@ -24,8 +24,7 @@ class Svg implements SvgOptions {
 
 		this.#paths = paths
 		for (const path of this.#paths) {
-			const pathEl = path.updateElement()
-			this.#svgEl.append(pathEl)
+			this.#svgEl.append(path.updateElement().getElement())
 		}
 
 		this.#updateAttributes()
