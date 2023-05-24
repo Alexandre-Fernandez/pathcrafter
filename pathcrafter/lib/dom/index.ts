@@ -29,3 +29,35 @@ export function getBoundingDocumentRect(element: Element) {
 		height: box.height,
 	} satisfies Omit<DOMRect, "toJSON">
 }
+
+export function getDocumentSize() {
+	return {
+		width: Math.max(
+			document.body.scrollWidth,
+			document.body.offsetWidth,
+			document.documentElement.clientWidth,
+			document.documentElement.scrollWidth,
+			document.documentElement.offsetWidth,
+		),
+		height: Math.max(
+			document.body.scrollHeight,
+			document.body.offsetHeight,
+			document.documentElement.clientHeight,
+			document.documentElement.scrollHeight,
+			document.documentElement.offsetHeight,
+		),
+	}
+}
+
+let counter = Number.MIN_SAFE_INTEGER
+export function generateUniqueId() {
+	const uid = `_${counter}`.replace("-", "0")
+
+	if (counter >= Number.MAX_SAFE_INTEGER) {
+		counter = Number.MIN_SAFE_INTEGER
+	} else {
+		counter += 1
+	}
+
+	return uid
+}

@@ -1,37 +1,50 @@
+import { generateUniqueId } from "@lib/dom"
 import Point2d from "@lib/geometry/2d/point2d.class"
 import Vector2d from "@lib/geometry/2d/vector2d.class"
 import PathInternals from "@src/core/path/classes/path-internals.class"
 import StraightVectorProperties from "@src/core/path/classes/vector-properties/straight-vector-properties.class"
 import CubicVectorProperties from "@src/core/path/classes/vector-properties/cubic-vector-properties.class"
 import QuadraticVectorProperties from "@src/core/path/classes/vector-properties/quadratic-vector-properties.class"
+import { SVG_NAMESPACE } from "@src/constants"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type {
 	Coordinates2dGetter,
 	LengthGetter,
-	PathStyle,
+	PathProps,
 } from "@src/core/path/types"
-import { SVG_NAMESPACE } from "@src/constants"
 
-class Path {
+class Path implements PathProps {
 	internals = new PathInternals()
 
-	style: PathStyle = {
-		fill: "none",
-		stroke: "none",
-		strokeWidth: 2,
-	}
+	fill = "none"
+
+	stroke = "black"
+
+	strokeWidth: string | number = 1
+
+	#id = generateUniqueId()
 
 	#groupEl
 
 	#pathEl
 
-	constructor(style: Partial<PathStyle> = {}) {
-		this.style = { ...this.style, ...style }
+	constructor({ id, fill, stroke, strokeWidth }: Partial<PathProps> = {}) {
+		if (id) this.#id = id
+		if (fill) this.fill = fill
+		if (stroke) this.stroke = stroke
+		if (strokeWidth) this.strokeWidth = strokeWidth
 
-		const g = document.createElementNS(SVG_NAMESPACE, "g")
 		this.#pathEl = document.createElementNS(SVG_NAMESPACE, "path")
-		g.append(this.#pathEl)
-		this.#groupEl = g
+
+		this.#groupEl = document.createElementNS(SVG_NAMESPACE, "g")
+		this.#groupEl.id = this.id
+
+		this.#updateAttributes()
+		this.#groupEl.append(this.#pathEl)
+	}
+
+	get id() {
+		return this.#id
 	}
 
 	setStart(startingPoint: Coordinates2d | Coordinates2dGetter | null) {
@@ -157,40 +170,20 @@ class Path {
 			d += ` ${vector.toSegment()}`
 		})
 
-		this.#setElementAttribute("path", "d", d)
-			.#setElementAttribute("path", "stroke", this.style.stroke)
-			.#setElementAttribute(
-				"path",
-				"stroke-width",
-				this.style.strokeWidth,
-			)
+		this.#pathEl.setAttribute("d", d)
+		this.#updateAttributes()
 
 		return this.#groupEl
 	}
 
-	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {
-		return typeof value === "function" ? (value as U) : () => value
+	#updateAttributes() {
+		this.#pathEl.setAttribute("fill", this.fill)
+		this.#pathEl.setAttribute("stroke", this.stroke)
+		this.#pathEl.setAttribute("stroke-width", `${this.strokeWidth}`)
 	}
 
-	#setElementAttribute(
-		el: "g" | "path",
-		key: string,
-		value: string | number,
-	) {
-		switch (el) {
-			case "g": {
-				this.#groupEl.setAttribute(key, `${value}`)
-				break
-			}
-			case "path": {
-				this.#pathEl.setAttribute(key, `${value}`)
-				break
-			}
-			default: {
-				break
-			}
-		}
-		return this
+	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {
+		return typeof value === "function" ? (value as U) : () => value
 	}
 }
 

@@ -1,5 +1,5 @@
-import type { Coordinates2d } from "@lib/geometry/2d/types"
 import StraightVectorProperties from "@src/core/path/classes/vector-properties/straight-vector-properties.class"
+import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type { Coordinates2dGetter, Vector2dGetter } from "@src/core/path/types"
 
 class CubicVectorProperties extends StraightVectorProperties {
