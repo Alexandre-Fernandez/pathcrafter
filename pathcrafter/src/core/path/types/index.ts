@@ -4,6 +4,7 @@ import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type CubicVectorProperties from "@src/core/path/classes/vector-properties/cubic-vector-properties.class"
 import type QuadraticVectorProperties from "@src/core/path/classes/vector-properties/quadratic-vector-properties.class"
 import type StraightVectorProperties from "@src/core/path/classes/vector-properties/straight-vector-properties.class"
+import type StraightMovement from "@src/core/path/classes/movements/straight-movement.class"
 
 export type LengthGetter = () => number
 
@@ -17,3 +18,5 @@ export type VectorProperties =
 	| StraightVectorProperties
 	| CubicVectorProperties
 	| QuadraticVectorProperties
+
+export type Movement = StraightMovement
