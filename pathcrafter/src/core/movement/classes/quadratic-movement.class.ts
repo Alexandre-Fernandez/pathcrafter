@@ -65,63 +65,6 @@ class QuadraticMovement extends StraightMovement {
 			this.getControl.bind({}),
 		)
 	}
-
-	// override toGapped(
-	// 	gap: number,
-	// 	nextVector?: Vector2dGetter,
-	// 	previousVector?: Vector2dGetter,
-	// ): QuadraticVectorProperties {
-	// 	const getParallelVector = () => {
-	// 		const parallel = this.getDisplacement().perpendicularTranslate(gap)
-	// 		if (!previousVector) return parallel
-
-	// 		const intersection = previousVector()
-	// 			.clone()
-	// 			.perpendicularTranslate(gap)
-	// 			.toLine2d()
-	// 			.intersects(parallel.toLine2d())
-
-	// 		if (intersection) {
-	// 			parallel.tail = intersection
-	// 		}
-
-	// 		return parallel
-	// 	}
-
-	// 	const getParallelControl = () => {
-	// 		const { tail: translation } = getParallelVector().substract(
-	// 			this.getDisplacement(),
-	// 		)
-	// 		return this.getControl().translate(translation.x, translation.y)
-	// 	}
-
-	// 	if (!nextVector) {
-	// 		return new QuadraticVectorProperties(
-	// 			getParallelVector,
-	// 			getParallelControl,
-	// 		)
-	// 	}
-
-	// 	// intersection between the gap spaced parallels of this and next vector
-	// 	const getParallelIntersection = () =>
-	// 		getParallelVector()
-	// 			.toLine2d()
-	// 			.intersects(
-	// 				nextVector().clone().perpendicularTranslate(gap).toLine2d(),
-	// 			)
-
-	// 	return new QuadraticVectorProperties(() => {
-	// 		const parallel = getParallelVector()
-	// 		const intersection = getParallelIntersection()
-
-	// 		if (intersection) {
-	// 			parallel.head = intersection
-	// 			return parallel
-	// 		}
-
-	// 		return parallel // no intersection, this and nextVector are parallel
-	// 	}, getParallelControl)
-	// }
 }
 
 export default QuadraticMovement

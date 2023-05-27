@@ -58,20 +58,20 @@ class Path {
 	addHorizontal(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
 
-		const getTail = this.#lastDestination.bind({})
+		const getOrigin = this.#lastDestination.bind({})
 
-		const getDisplacementHead = () =>
-			getTail().clone().add(new Point2d(getLength(), 0))
+		const getDisplacementDestination = () =>
+			getOrigin().clone().add(new Point2d(getLength(), 0))
 
 		this.#movements.push(
 			new StraightMovement(
-				getTail,
-				getDisplacementHead,
-				() => new Vector2d(getDisplacementHead(), getTail()),
+				getOrigin,
+				getDisplacementDestination,
+				() => new Vector2d(getDisplacementDestination(), getOrigin()),
 			),
 		)
 
-		this.#lastDestination = getDisplacementHead
+		this.#lastDestination = getDisplacementDestination
 
 		return this
 	}
@@ -79,20 +79,20 @@ class Path {
 	addVertical(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
 
-		const getTail = this.#lastDestination.bind({})
+		const getOrigin = this.#lastDestination.bind({})
 
-		const getDisplacementHead = () =>
-			getTail().clone().add(new Point2d(0, getLength()))
+		const getDisplacementDestination = () =>
+			getOrigin().clone().add(new Point2d(0, getLength()))
 
 		this.#movements.push(
 			new StraightMovement(
-				getTail,
-				getDisplacementHead,
-				() => new Vector2d(getDisplacementHead(), getTail()),
+				getOrigin,
+				getDisplacementDestination,
+				() => new Vector2d(getDisplacementDestination(), getOrigin()),
 			),
 		)
 
-		this.#lastDestination = getDisplacementHead
+		this.#lastDestination = getDisplacementDestination
 
 		return this
 	}
@@ -100,22 +100,22 @@ class Path {
 	addDiagonal(length: Coordinates2d | Coordinates2dGetter) {
 		const getLength = this.#getterize(length)
 
-		const getTail = this.#lastDestination.bind({})
+		const getOrigin = this.#lastDestination.bind({})
 
-		const getDisplacementHead = () => {
+		const getDisplacementDestination = () => {
 			const { x, y } = getLength()
-			return getTail().clone().add(new Point2d(x, y))
+			return getOrigin().clone().add(new Point2d(x, y))
 		}
 
 		this.#movements.push(
 			new StraightMovement(
-				getTail,
-				getDisplacementHead,
-				() => new Vector2d(getDisplacementHead(), getTail()),
+				getOrigin,
+				getDisplacementDestination,
+				() => new Vector2d(getDisplacementDestination(), getOrigin()),
 			),
 		)
 
-		this.#lastDestination = getDisplacementHead
+		this.#lastDestination = getDisplacementDestination
 
 		return this
 	}
@@ -129,32 +129,36 @@ class Path {
 		const getStartControl = this.#getterize(startControl) // starts from tail
 		const getEndControl = this.#getterize(endControl) // starts from head
 
-		const getTail = this.#lastDestination.bind({})
+		const getOrigin = this.#lastDestination.bind({})
 
-		const getDisplacementHead = () => {
+		const getDisplacementDestination = () => {
 			const { x, y } = getLength()
-			return getTail().clone().add(new Point2d(x, y))
+			return getOrigin().clone().add(new Point2d(x, y))
 		}
-		const getStartControlHead = () => {
+		const getStartControlDestination = () => {
 			const { x, y } = getStartControl()
-			return getTail().clone().add(new Point2d(x, y))
+			return getOrigin().clone().add(new Point2d(x, y))
 		}
-		const getEndControlHead = () => {
+		const getEndControlDestination = () => {
 			const { x, y } = getEndControl()
-			return getDisplacementHead().clone().add(new Point2d(x, y))
+			return getDisplacementDestination().clone().add(new Point2d(x, y))
 		}
 
 		this.#movements.push(
 			new CubicMovement(
-				getTail,
-				getDisplacementHead,
-				() => new Vector2d(getDisplacementHead(), getTail()),
-				() => new Vector2d(getStartControlHead(), getTail()),
-				() => new Vector2d(getEndControlHead(), getDisplacementHead()),
+				getOrigin,
+				getDisplacementDestination,
+				() => new Vector2d(getDisplacementDestination(), getOrigin()),
+				() => new Vector2d(getStartControlDestination(), getOrigin()),
+				() =>
+					new Vector2d(
+						getEndControlDestination(),
+						getDisplacementDestination(),
+					),
 			),
 		)
 
-		this.#lastDestination = getDisplacementHead
+		this.#lastDestination = getDisplacementDestination
 
 		return this
 	}
@@ -166,27 +170,27 @@ class Path {
 		const getLength = this.#getterize(length)
 		const getControl = this.#getterize(control) // starts from tail
 
-		const getTail = this.#lastDestination.bind({})
+		const getOrigin = this.#lastDestination.bind({})
 
-		const getDisplacementHead = () => {
+		const getDisplacementDestination = () => {
 			const { x, y } = getLength()
-			return getTail().clone().add(new Point2d(x, y))
+			return getOrigin().clone().add(new Point2d(x, y))
 		}
-		const getControlHead = (/* starts from tail */) => {
+		const getControlDestination = (/* starts from tail */) => {
 			const { x, y } = getControl()
-			return getTail().clone().add(new Point2d(x, y))
+			return getOrigin().clone().add(new Point2d(x, y))
 		}
 
 		this.#movements.push(
 			new QuadraticMovement(
-				getTail,
-				getDisplacementHead,
-				() => new Vector2d(getDisplacementHead(), getTail()),
-				() => new Vector2d(getControlHead(), getTail()),
+				getOrigin,
+				getDisplacementDestination,
+				() => new Vector2d(getDisplacementDestination(), getOrigin()),
+				() => new Vector2d(getControlDestination(), getOrigin()),
 			),
 		)
 
-		this.#lastDestination = getDisplacementHead
+		this.#lastDestination = getDisplacementDestination
 
 		return this
 	}
@@ -227,62 +231,17 @@ class Path {
 			movements.push(movement.createParallel(gap, neighbors))
 		}
 
-		const getLastDisplacement = movements.at(-1)?.getDisplacement.bind({})
-		if (!getLastDisplacement) {
+		const getLastDestination = movements.at(-1)?.getDestination.bind({})
+		if (!getLastDestination) {
 			throw new UnexpectedError(
 				"Empty parallel movements in spite of filled movements.",
 			)
 		}
 
-		return new Path(() => getLastDisplacement().head, id, {
+		return new Path(getLastDestination, id, {
 			movements,
 		} satisfies PathInternals)
 	}
-
-	// getParallel(gap: number) {
-	// 	const parallel: VectorProperties[] = []
-
-	// 	const translatedVectors = this.internals.getTranslatedVectors()
-
-	// 	for (const [i, vector] of translatedVectors.entries()) {
-	// 		const lastIndex = translatedVectors.length - 1
-
-	// 		const nextVector = translatedVectors[Math.min(i + 1, lastIndex)]
-	// 		const previousVector = translatedVectors[Math.max(0, i - 1)]
-
-	// 		if (i === 0) {
-	// 			parallel.push(
-	// 				vector.toGapped(
-	// 					gap,
-	// 					undefined,
-	// 					nextVector?.getDisplacement,
-	// 				),
-	// 			)
-	// 			continue
-	// 		}
-
-	// 		if (i === lastIndex) {
-	// 			parallel.push(
-	// 				vector.toGapped(gap, previousVector?.getDisplacement),
-	// 			)
-	// 			continue
-	// 		}
-
-	// 		parallel.push(
-	// 			vector.toGapped(
-	// 				gap,
-	// 				previousVector?.getDisplacement,
-	// 				nextVector?.getDisplacement,
-	// 			),
-	// 		)
-	// 	}
-
-	// 	const path = new Path()
-	// 	path.internals.vectors = parallel
-	// 	path.internals.start = () => parallel[0]!.getDisplacement().tail
-
-	// 	return path
-	// }
 
 	clone(id?: string) {
 		return new Path(this.#lastDestination.bind({}), id, {

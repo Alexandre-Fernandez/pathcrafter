@@ -61,7 +61,7 @@ class StraightMovement {
 	) {
 		const clonedGetDisplacement = this.getDisplacement.bind({})
 
-		const getTail = () => {
+		const getOrigin = () => {
 			const parallelDisplacement =
 				clonedGetDisplacement().perpendicularTranslate(gap)
 			if (!previous) return parallelDisplacement.tail
@@ -77,7 +77,7 @@ class StraightMovement {
 			return parallelDisplacement.tail
 		}
 
-		const getHead = () => {
+		const getDestination = () => {
 			const parallelDisplacement =
 				clonedGetDisplacement().perpendicularTranslate(gap)
 			if (!next) return parallelDisplacement.head
@@ -97,59 +97,11 @@ class StraightMovement {
 		}
 
 		return new StraightMovement(
-			getTail,
-			getHead,
-			() => new Vector2d(getHead(), getTail()),
+			getOrigin,
+			getDestination,
+			() => new Vector2d(getDestination(), getOrigin()),
 		)
 	}
-
-	// toGapped(
-	// 	gap: number,
-	// 	previousVector?: Vector2dGetter,
-	// 	nextVector?: Vector2dGetter,
-	// ): StraightMovement {
-	// 	const getParallelVector = () => {
-	// 		const parallel = this.getDisplacement().perpendicularTranslate(gap)
-	// 		if (!previousVector) return parallel
-
-	// 		const intersection = previousVector()
-	// 			.clone()
-	// 			.perpendicularTranslate(gap)
-	// 			.toLine2d()
-	// 			.intersects(parallel.toLine2d())
-
-	// 		if (intersection) {
-	// 			parallel.tail = intersection
-	// 		}
-
-	// 		return parallel
-	// 	}
-
-	// 	if (!nextVector) {
-	// 		return new StraightVectorProperties(getParallelVector)
-	// 	}
-
-	// 	// intersection between the gap spaced parallels of this and next vector
-	// 	const getParallelIntersection = () => {
-	// 		return getParallelVector()
-	// 			.toLine2d()
-	// 			.intersects(
-	// 				nextVector().clone().perpendicularTranslate(gap).toLine2d(),
-	// 			)
-	// 	}
-
-	// 	return new StraightVectorProperties(() => {
-	// 		const parallel = getParallelVector()
-	// 		const intersection = getParallelIntersection()
-
-	// 		if (intersection) {
-	// 			parallel.head = intersection
-	// 			return parallel
-	// 		}
-
-	// 		return parallel // no intersection, this and nextVector are parallel
-	// 	})
-	// }
 }
 
 export default StraightMovement
