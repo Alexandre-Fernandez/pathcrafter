@@ -1,5 +1,7 @@
 import Point2d from "@lib/geometry/2d/point2d.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
+import Vector2d from "@lib/geometry/2d/vector2d.class"
+import type { Movement } from "@src/core/movement/types"
 import type {
 	Coordinates2dGetter,
 	Point2dGetter,
@@ -50,6 +52,54 @@ class StraightMovement {
 			this.getOrigin.bind({}),
 			this.getDestination.bind({}),
 			this.getDisplacement.bind({}),
+		)
+	}
+
+	createParallel(
+		gap: number,
+		{ previous, next }: { previous?: Movement; next?: Movement },
+	) {
+		const clonedGetDisplacement = this.getDisplacement.bind({})
+
+		const getTail = () => {
+			const parallelDisplacement =
+				clonedGetDisplacement().perpendicularTranslate(gap)
+			if (!previous) return parallelDisplacement.tail
+
+			const previousIntersection = previous
+				.getDisplacement()
+				.perpendicularTranslate(gap)
+				.toLine2d()
+				.intersects(parallelDisplacement.toLine2d())
+
+			if (previousIntersection) return previousIntersection
+			// no intersection, previous displacement is parallel
+			return parallelDisplacement.tail
+		}
+
+		const getHead = () => {
+			const parallelDisplacement =
+				clonedGetDisplacement().perpendicularTranslate(gap)
+			if (!next) return parallelDisplacement.head
+
+			const nextIntersection = parallelDisplacement
+				.toLine2d()
+				.intersects(
+					next
+						.getDisplacement()
+						.perpendicularTranslate(gap)
+						.toLine2d(),
+				)
+
+			if (nextIntersection) return nextIntersection
+			// no intersection, next displacement is parallel
+			return parallelDisplacement.head
+		}
+
+		return new StraightMovement(
+			getTail,
+			getHead,
+			() => new Vector2d(getHead(), getTail()),
 		)
 	}
 

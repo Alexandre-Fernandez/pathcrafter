@@ -11,6 +11,8 @@ import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type { Coordinates2dGetter, LengthGetter } from "@src/types"
 import type { PathInternals } from "@src/core/path/types"
 import type { Movement } from "@src/core/movement/types"
+import EmptyMovements from "@src/core/path/errors/empty-movements.error"
+import UnexpectedError from "@src/errors/unexpected-error.error"
 
 class Path {
 	#id
@@ -208,21 +210,34 @@ class Path {
 		return this
 	}
 
-	// updateElement() {
-	// 	let d = ""
+	createParallel(gap: number, id?: string) {
+		if (this.#movements.length === 0) throw new EmptyMovements()
 
-	// 	this.internals.forEachTranslatedVector((vector, i) => {
-	// 		if (i === 0) {
-	// 			d += vector.toSegment(true)
-	// 			return
-	// 		}
-	// 		d += ` ${vector.toSegment()}`
-	// 	})
+		const movements: Movement[] = []
 
-	// 	this.#pathEl.setAttribute("d", d)
+		for (const [i, movement] of this.#movements.entries()) {
+			const neighbors: Parameters<Movement["createParallel"]>[1] = {}
 
-	// 	return this
-	// }
+			const previous = this.#movements[i - 1]
+			if (previous) neighbors.previous = previous
+
+			const next = this.#movements[i + 1]
+			if (next) neighbors.next = next
+
+			movements.push(movement.createParallel(gap, neighbors))
+		}
+
+		const getLastDisplacement = movements.at(-1)?.getDisplacement.bind({})
+		if (!getLastDisplacement) {
+			throw new UnexpectedError(
+				"Empty parallel movements in spite of filled movements.",
+			)
+		}
+
+		return new Path(() => getLastDisplacement().head, id, {
+			movements,
+		} satisfies PathInternals)
+	}
 
 	// getParallel(gap: number) {
 	// 	const parallel: VectorProperties[] = []

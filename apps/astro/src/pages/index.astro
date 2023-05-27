@@ -28,15 +28,18 @@ import Layout from "../layouts/Layout.astro"
 
 	const path1 = new Path({ x: 400, y: 50 })
 		.addHorizontal(400)
-		.addQuadratic({ x: 0, y: 100 }, { x: 100, y: 50 })
-		.addCubic({ x: 0, y: 100 }, { x: -50, y: 0 }, { x: 50, y: 0 })
+		.addVertical(50)
 		.addHorizontal(50)
 		.addVertical(50)
-	// .addVertical(50)
-	// .addQuadratic({ x: 0, y: 200 }, { x: 100, y: 100 })
-	// .addDiagonal({ x: -500, y: 500 })
+		.addHorizontal(50)
+		.addVertical(50)
+		.addDiagonal({ x: -500, y: 500 })
 
-	new Svg([path1])
+	const path2 = path1.createParallel(5)
+
+	const path3 = path2.createParallel(5)
+
+	new Svg([path1, path2, path3])
 </script>
 
 <style>
