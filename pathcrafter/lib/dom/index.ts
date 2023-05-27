@@ -50,9 +50,14 @@ export function getDocumentSize() {
 }
 
 let counter = Number.MIN_SAFE_INTEGER
+const uidLength = 1 + Number.MIN_SAFE_INTEGER.toString().length
 export function generateUniqueId() {
 	let uid = counter.toString()
-	uid = uid.at(0) === "-" ? `_${uid.replace("-", "0")}` : `_1${uid}`
+	const padding = uidLength - (uid.length + 1)
+	uid =
+		uid.at(0) === "-"
+			? `_0${"0".repeat(padding)}${uid.replace("-", "0")}`
+			: `_1${"0".repeat(padding)}${uid}`
 
 	if (counter >= Number.MAX_SAFE_INTEGER) {
 		counter = Number.MIN_SAFE_INTEGER
