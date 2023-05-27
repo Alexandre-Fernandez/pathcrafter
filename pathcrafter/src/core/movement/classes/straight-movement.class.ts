@@ -4,7 +4,7 @@ import type {
 	Coordinates2dGetter,
 	Point2dGetter,
 	Vector2dGetter,
-} from "@src/core/path/types"
+} from "@src/types"
 
 class StraightMovement {
 	constructor(

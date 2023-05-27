@@ -3,17 +3,14 @@ import { assertGuard } from "@lib/ts/guards"
 import Point2d from "@lib/geometry/2d/point2d.class"
 import Vector2d from "@lib/geometry/2d/vector2d.class"
 import { SVG_NAMESPACE } from "@src/constants"
-import StraightMovement from "@src/core/path/classes/movements/straight-movement.class"
-import QuadraticMovement from "@src/core/path/classes/movements/quadratic-movement.class"
-import CubicMovement from "@src/core/path/classes/movements/cubic-movement.class"
-import { isMovementArray } from "@src/core/path/guards/movement.guard"
+import { isMovementArray } from "@src/core/movement/guards/movement.guard"
+import StraightMovement from "@src/core/movement/classes/straight-movement.class"
+import CubicMovement from "@src/core/movement/classes/cubic-movement.class"
+import QuadraticMovement from "@src/core/movement/classes/quadratic-movement.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
-import type {
-	Coordinates2dGetter,
-	LengthGetter,
-	Movement,
-	PathInternals,
-} from "@src/core/path/types"
+import type { Coordinates2dGetter, LengthGetter } from "@src/types"
+import type { PathInternals } from "@src/core/path/types"
+import type { Movement } from "@src/core/movement/types"
 
 class Path {
 	#id

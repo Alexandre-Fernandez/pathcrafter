@@ -1,11 +1,11 @@
-import StraightMovement from "@src/core/path/classes/movements/straight-movement.class"
+import Point2d from "@lib/geometry/2d/point2d.class"
+import StraightMovement from "@src/core/movement/classes/straight-movement.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type {
 	Coordinates2dGetter,
 	Point2dGetter,
 	Vector2dGetter,
-} from "@src/core/path/types"
-import Point2d from "@lib/geometry/2d/point2d.class"
+} from "@src/types"
 
 class QuadraticMovement extends StraightMovement {
 	constructor(
