@@ -28,11 +28,10 @@ import Layout from "../layouts/Layout.astro"
 
 	const path1 = new Path({ x: 400, y: 50 })
 		.addHorizontal(400)
-		.addVertical(50)
+		.addQuadratic({ x: 0, y: 100 }, { x: 100, y: 50 })
+		.addCubic({ x: 0, y: 100 }, { x: -50, y: 0 }, { x: 50, y: 0 })
 		.addHorizontal(50)
 		.addVertical(50)
-		.addHorizontal(50)
-		.addVertical(400)
 	// .addVertical(50)
 	// .addQuadratic({ x: 0, y: 200 }, { x: 100, y: 100 })
 	// .addDiagonal({ x: -500, y: 500 })

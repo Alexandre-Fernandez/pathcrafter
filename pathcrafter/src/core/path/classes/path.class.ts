@@ -1,25 +1,21 @@
 import { generateUniqueId } from "@lib/dom"
+import { assertGuard } from "@lib/ts/guards"
 import Point2d from "@lib/geometry/2d/point2d.class"
 import Vector2d from "@lib/geometry/2d/vector2d.class"
-import PathInternals from "@src/core/path/classes/path-internals.class"
-import CubicVectorProperties from "@src/core/path/classes/vector-properties/cubic-vector-properties.class"
-import QuadraticVectorProperties from "@src/core/path/classes/vector-properties/quadratic-vector-properties.class"
 import { SVG_NAMESPACE } from "@src/constants"
+import StraightMovement from "@src/core/path/classes/movements/straight-movement.class"
+import QuadraticMovement from "@src/core/path/classes/movements/quadratic-movement.class"
+import CubicMovement from "@src/core/path/classes/movements/cubic-movement.class"
+import { isMovementArray } from "@src/core/path/guards/movement.guard"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type {
 	Coordinates2dGetter,
 	LengthGetter,
 	Movement,
+	PathInternals,
 } from "@src/core/path/types"
-import StraightMovement from "@src/core/path/classes/movements/straight-movement.class"
-
-// movements
-// vectors
-// segments
 
 class Path {
-	internals = new PathInternals()
-
 	#id
 
 	#lastDestination: Movement["getDestination"]
@@ -33,7 +29,14 @@ class Path {
 	constructor(
 		startingPoint: Coordinates2d | Coordinates2dGetter,
 		id = generateUniqueId(),
+		internals: Record<string, unknown> = {},
 	) {
+		// internals
+		if (internals["movements"]) {
+			assertGuard(internals["movements"], isMovementArray)
+			this.#movements = internals["movements"]
+		}
+
 		// props
 		const getStartingPoint = this.#getterize(startingPoint)
 		this.#lastDestination = () => {
@@ -55,44 +58,52 @@ class Path {
 
 	addHorizontal(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
+
 		const getTail = this.#lastDestination.bind({})
-		const getHead = () => getTail().clone().add(new Point2d(getLength(), 0))
+
+		const getDisplacementHead = () =>
+			getTail().clone().add(new Point2d(getLength(), 0))
 
 		this.#movements.push(
 			new StraightMovement(
 				getTail,
-				getHead,
-				() => new Vector2d(getHead(), getTail()),
+				getDisplacementHead,
+				() => new Vector2d(getDisplacementHead(), getTail()),
 			),
 		)
 
-		this.#lastDestination = getHead
+		this.#lastDestination = getDisplacementHead
 
 		return this
 	}
 
 	addVertical(length: number | LengthGetter) {
 		const getLength = this.#getterize(length)
+
 		const getTail = this.#lastDestination.bind({})
-		const getHead = () => getTail().clone().add(new Point2d(0, getLength()))
+
+		const getDisplacementHead = () =>
+			getTail().clone().add(new Point2d(0, getLength()))
 
 		this.#movements.push(
 			new StraightMovement(
 				getTail,
-				getHead,
-				() => new Vector2d(getHead(), getTail()),
+				getDisplacementHead,
+				() => new Vector2d(getDisplacementHead(), getTail()),
 			),
 		)
 
-		this.#lastDestination = getHead
+		this.#lastDestination = getDisplacementHead
 
 		return this
 	}
 
 	addDiagonal(length: Coordinates2d | Coordinates2dGetter) {
 		const getLength = this.#getterize(length)
+
 		const getTail = this.#lastDestination.bind({})
-		const getHead = () => {
+
+		const getDisplacementHead = () => {
 			const { x, y } = getLength()
 			return getTail().clone().add(new Point2d(x, y))
 		}
@@ -100,12 +111,12 @@ class Path {
 		this.#movements.push(
 			new StraightMovement(
 				getTail,
-				getHead,
-				() => new Vector2d(getHead(), getTail()),
+				getDisplacementHead,
+				() => new Vector2d(getDisplacementHead(), getTail()),
 			),
 		)
 
-		this.#lastDestination = getHead
+		this.#lastDestination = getDisplacementHead
 
 		return this
 	}
@@ -116,32 +127,36 @@ class Path {
 		endControl: Coordinates2d | Coordinates2dGetter,
 	) {
 		const getLength = this.#getterize(length)
-		const getStartControl = this.#getterize(startControl)
-		const getEndControl = this.#getterize(endControl)
+		const getStartControl = this.#getterize(startControl) // starts from tail
+		const getEndControl = this.#getterize(endControl) // starts from head
 
-		this.internals.vectors.push(
-			new CubicVectorProperties(
-				() => {
-					const { x, y } = getLength()
-					return Vector2d.fromCoordinates(x, y)
-				},
-				() => {
-					const { x, y } = getStartControl()
-					return Vector2d.fromCoordinates(x, y)
-				},
-				() => {
-					const length = getLength()
-					const endControl = getEndControl()
-					return new Vector2d(
-						new Point2d(
-							length.x + endControl.x,
-							length.y + endControl.y,
-						),
-						length,
-					)
-				},
+		const getTail = this.#lastDestination.bind({})
+
+		const getDisplacementHead = () => {
+			const { x, y } = getLength()
+			return getTail().clone().add(new Point2d(x, y))
+		}
+		const getStartControlHead = () => {
+			const { x, y } = getStartControl()
+			return getTail().clone().add(new Point2d(x, y))
+		}
+		const getEndControlHead = () => {
+			const { x, y } = getEndControl()
+			return getDisplacementHead().clone().add(new Point2d(x, y))
+		}
+
+		this.#movements.push(
+			new CubicMovement(
+				getTail,
+				getDisplacementHead,
+				() => new Vector2d(getDisplacementHead(), getTail()),
+				() => new Vector2d(getStartControlHead(), getTail()),
+				() => new Vector2d(getEndControlHead(), getDisplacementHead()),
 			),
 		)
+
+		this.#lastDestination = getDisplacementHead
+
 		return this
 	}
 
@@ -150,19 +165,30 @@ class Path {
 		control: Coordinates2d | Coordinates2dGetter,
 	) {
 		const getLength = this.#getterize(length)
-		const getControl = this.#getterize(control)
-		this.internals.vectors.push(
-			new QuadraticVectorProperties(
-				() => {
-					const { x, y } = getLength()
-					return Vector2d.fromCoordinates(x, y)
-				},
-				() => {
-					const { x, y } = getControl()
-					return Vector2d.fromCoordinates(x, y)
-				},
+		const getControl = this.#getterize(control) // starts from tail
+
+		const getTail = this.#lastDestination.bind({})
+
+		const getDisplacementHead = () => {
+			const { x, y } = getLength()
+			return getTail().clone().add(new Point2d(x, y))
+		}
+		const getControlHead = (/* starts from tail */) => {
+			const { x, y } = getControl()
+			return getTail().clone().add(new Point2d(x, y))
+		}
+
+		this.#movements.push(
+			new QuadraticMovement(
+				getTail,
+				getDisplacementHead,
+				() => new Vector2d(getDisplacementHead(), getTail()),
+				() => new Vector2d(getControlHead(), getTail()),
 			),
 		)
+
+		this.#lastDestination = getDisplacementHead
+
 		return this
 	}
 
@@ -246,10 +272,10 @@ class Path {
 	// 	return path
 	// }
 
-	clone() {
-		const path = new Path(this.#lastDestination.bind({}))
-		path.internals = this.internals.clone()
-		return path
+	clone(id?: string) {
+		return new Path(this.#lastDestination.bind({}), id, {
+			movements: this.#movements.map((movement) => movement.clone()),
+		} satisfies PathInternals)
 	}
 
 	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {

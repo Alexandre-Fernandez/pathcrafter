@@ -1,5 +1,13 @@
+import type CubicVectorProperties from "@src/core/path/classes/vector-properties/cubic-vector-properties.class"
+import type QuadraticVectorProperties from "@src/core/path/classes/vector-properties/quadratic-vector-properties.class"
+import type StraightVectorProperties from "@src/core/path/classes/vector-properties/straight-vector-properties.class"
 import NoStartingPoint from "@src/core/path/errors/no-starting-point.error"
-import type { Point2dGetter, VectorProperties } from "@src/core/path/types"
+import type { Point2dGetter } from "@src/core/path/types"
+
+type VectorProperties =
+	| StraightVectorProperties
+	| CubicVectorProperties
+	| QuadraticVectorProperties
 
 class PathInternals {
 	/** Array of position vectors (`tail.x === 0 && tail.y === 0`) getters. */
