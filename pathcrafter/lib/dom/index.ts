@@ -53,11 +53,12 @@ let counter = Number.MIN_SAFE_INTEGER
 const UID_LENGTH = 18
 export function generateUniqueId() {
 	let uid = counter.toString()
-	const padding = UID_LENGTH - (uid.replace("-", "").length + 2)
+	const purgedUid = uid.replace("-", "")
+	const padding = UID_LENGTH - (purgedUid.length + 2)
 	uid =
 		uid.at(0) === "-"
-			? `_0${"0".repeat(padding)}${uid.replace("-", "0")}`
-			: `_1${"0".repeat(padding)}${uid}`
+			? `_0${"0".repeat(padding)}${purgedUid}`
+			: `_1${"0".repeat(padding)}${purgedUid}`
 
 	if (counter >= Number.MAX_SAFE_INTEGER) {
 		counter = Number.MIN_SAFE_INTEGER
