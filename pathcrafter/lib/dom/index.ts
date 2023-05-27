@@ -50,7 +50,7 @@ export function getDocumentSize() {
 }
 
 let counter = Number.MIN_SAFE_INTEGER
-const UID_LENGTH = 18
+const UID_LENGTH = 18 // minimum size: 18 ("_" + MIN_SAFE_INTEGER.length)
 export function generateUniqueId() {
 	let uid = counter.toString()
 	const purgedUid = uid.replace("-", "")
