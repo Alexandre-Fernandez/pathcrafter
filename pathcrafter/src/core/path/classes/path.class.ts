@@ -11,7 +11,7 @@ import EmptyMovements from "@src/core/path/errors/empty-movements.error"
 import UnexpectedError from "@src/errors/unexpected-error.error"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type { Coordinates2dGetter, LengthGetter } from "@src/types"
-import type { PathInternals } from "@src/core/path/types"
+import type { PathInternals, PathOptions } from "@src/core/path/types"
 import type { Movement } from "@src/core/movement/types"
 
 class Path {
@@ -27,7 +27,7 @@ class Path {
 
 	constructor(
 		startingPoint: Coordinates2d | Coordinates2dGetter,
-		id = generateUniqueId(),
+		options: Partial<PathOptions> = {},
 		internals: Record<string, unknown> = {},
 	) {
 		// internals
@@ -42,6 +42,7 @@ class Path {
 			const { x, y } = getStartingPoint()
 			return new Point2d(x, y)
 		}
+		const { id } = { ...Path.#defaultOptions, ...options }
 		this.#id = id
 
 		// dom
@@ -49,6 +50,12 @@ class Path {
 		this.#groupEl = document.createElementNS(SVG_NAMESPACE, "g")
 		this.#groupEl.id = this.id
 		this.#groupEl.append(this.#pathEl)
+	}
+
+	static get #defaultOptions(): PathOptions {
+		return {
+			id: generateUniqueId(),
+		}
 	}
 
 	get id() {
@@ -214,9 +221,10 @@ class Path {
 		return this
 	}
 
-	createParallel(gap: number, id?: string) {
+	createParallel(gap: number, options?: Partial<PathOptions>) {
 		if (this.#movements.length === 0) throw new EmptyMovements()
 
+		const pathOptions = { ...Path.#defaultOptions, ...options }
 		const movements: Movement[] = []
 
 		for (const [i, movement] of this.#movements.entries()) {
@@ -238,13 +246,15 @@ class Path {
 			)
 		}
 
-		return new Path(getLastDestination, id, {
+		return new Path(getLastDestination, pathOptions, {
 			movements,
 		} satisfies PathInternals)
 	}
 
-	clone(id?: string) {
-		return new Path(this.#lastDestination.bind({}), id, {
+	clone(options?: Partial<PathOptions>) {
+		const pathOptions = { ...Path.#defaultOptions, ...options }
+
+		return new Path(this.#lastDestination.bind({}), pathOptions, {
 			movements: this.#movements.map((movement) => movement.clone()),
 		} satisfies PathInternals)
 	}
