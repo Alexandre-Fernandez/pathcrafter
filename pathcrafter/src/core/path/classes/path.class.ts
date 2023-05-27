@@ -126,8 +126,8 @@ class Path {
 		endControl: Coordinates2d | Coordinates2dGetter,
 	) {
 		const getLength = this.#getterize(length)
-		const getStartControl = this.#getterize(startControl) // starts from tail
-		const getEndControl = this.#getterize(endControl) // starts from head
+		const getStartControl = this.#getterize(startControl) // starts from origin
+		const getEndControl = this.#getterize(endControl) // starts from destination
 
 		const getOrigin = this.#lastDestination.bind({})
 
@@ -168,7 +168,7 @@ class Path {
 		control: Coordinates2d | Coordinates2dGetter,
 	) {
 		const getLength = this.#getterize(length)
-		const getControl = this.#getterize(control) // starts from tail
+		const getControl = this.#getterize(control) // starts from origin
 
 		const getOrigin = this.#lastDestination.bind({})
 
@@ -176,7 +176,7 @@ class Path {
 			const { x, y } = getLength()
 			return getOrigin().clone().add(new Point2d(x, y))
 		}
-		const getControlDestination = (/* starts from tail */) => {
+		const getControlDestination = () => {
 			const { x, y } = getControl()
 			return getOrigin().clone().add(new Point2d(x, y))
 		}
