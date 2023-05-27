@@ -51,7 +51,8 @@ export function getDocumentSize() {
 
 let counter = Number.MIN_SAFE_INTEGER
 export function generateUniqueId() {
-	const uid = `_${counter}`.replace("-", "0")
+	let uid = counter.toString()
+	uid = uid.at(0) === "-" ? `_${uid.replace("-", "0")}` : `_1${uid}`
 
 	if (counter >= Number.MAX_SAFE_INTEGER) {
 		counter = Number.MIN_SAFE_INTEGER
