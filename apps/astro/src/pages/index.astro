@@ -26,20 +26,64 @@ import Layout from "../layouts/Layout.astro"
 <script>
 	import { Path, Svg } from "pathcrafter"
 
-	const path1 = new Path({ x: 400, y: 50 })
+	const path1 = new Path({ x: 400, y: 50 }, { id: "test" })
 		.addHorizontal(400)
 		.addVertical(50)
-		.addHorizontal(50)
+		.addHorizontal(50, "xd")
 		.addVertical(50)
 		.addHorizontal(50)
 		.addVertical(50)
 		.addDiagonal({ x: -500, y: 500 })
 
-	const path2 = path1.createParallel(5)
+	const path2 = path1.createParallel(10)
 
-	const path3 = path2.createParallel(5)
+	const path3 = path1
+		.createParallel(-10)
+		.createPartial("xd")
+		.addDiagonal({ x: 50, y: -50 })
 
 	new Svg([path1, path2, path3])
+
+	/*
+	const group = document.querySelector("#test")
+
+	// <circle cx="50" cy="50" r="50" />
+	// <rect width="100" height="100" />
+	const circle = document.createElementNS(
+		"http://www.w3.org/2000/svg",
+		"circle",
+	)
+	circle.setAttribute("cx", "400")
+	circle.setAttribute("cy", "50")
+	circle.setAttribute("r", "2")
+	circle.setAttribute("fill", "black")
+
+	const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+	rect.setAttribute("width", "2")
+	rect.setAttribute("height", "2")
+	rect.setAttribute("x", "401")
+	rect.setAttribute("y", "49")
+
+	group?.append(rect)
+	*/
+
+	/*
+		______animation______
+
+		const path = document.querySelector("#pathId")
+		const pathLength = path?.getTotalLength()
+
+		path?.style.strokeDasharray = `${pathLength} ${pathLength}`
+		path?.style.strokeDashoffset = pathLength
+
+		window.addEventListener("scroll", () => {
+			const scrollPct = document.documentElement.scrollTop...
+
+			const drawLength = pathLength * scrollPct
+
+			path?.style.strokeDashoffset = pathLength - drawLength
+		})
+	*/
 </script>
 
 <style>

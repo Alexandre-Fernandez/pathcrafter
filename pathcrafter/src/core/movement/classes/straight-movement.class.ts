@@ -13,6 +13,7 @@ class StraightMovement {
 		public getOrigin: Point2dGetter,
 		public getDestination: Point2dGetter,
 		public getDisplacement: Vector2dGetter,
+		public marker?: string,
 	) {}
 
 	translate(translation: Coordinates2d | Coordinates2dGetter) {
@@ -52,6 +53,7 @@ class StraightMovement {
 			this.getOrigin.bind({}),
 			this.getDestination.bind({}),
 			this.getDisplacement.bind({}),
+			this.marker,
 		)
 	}
 
@@ -100,6 +102,7 @@ class StraightMovement {
 			getOrigin,
 			getDestination,
 			() => new Vector2d(getDestination(), getOrigin()),
+			this.marker,
 		)
 	}
 }

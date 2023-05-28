@@ -13,8 +13,9 @@ class QuadraticMovement extends StraightMovement {
 		getDestination: Point2dGetter,
 		getDisplacement: Vector2dGetter,
 		public getControl: Vector2dGetter,
+		marker?: string,
 	) {
-		super(getOrigin, getDestination, getDisplacement)
+		super(getOrigin, getDestination, getDisplacement, marker)
 	}
 
 	override translate(translation: Coordinates2d | Coordinates2dGetter) {
@@ -63,6 +64,7 @@ class QuadraticMovement extends StraightMovement {
 			this.getDestination.bind({}),
 			this.getDisplacement.bind({}),
 			this.getControl.bind({}),
+			this.marker,
 		)
 	}
 }

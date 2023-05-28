@@ -14,8 +14,9 @@ class CubicMovement extends StraightMovement {
 		getDisplacement: Vector2dGetter,
 		public getStartControl: Vector2dGetter,
 		public getEndControl: Vector2dGetter,
+		marker?: string,
 	) {
-		super(getOrigin, getDestination, getDisplacement)
+		super(getOrigin, getDestination, getDisplacement, marker)
 	}
 
 	override translate(translation: Coordinates2d | Coordinates2dGetter) {
@@ -71,6 +72,7 @@ class CubicMovement extends StraightMovement {
 			this.getDisplacement.bind({}),
 			this.getStartControl.bind({}),
 			this.getEndControl.bind({}),
+			this.marker,
 		)
 	}
 }

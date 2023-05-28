@@ -13,6 +13,7 @@ import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type { Coordinates2dGetter, LengthGetter } from "@src/types"
 import type { PathInternals, PathOptions } from "@src/core/path/types"
 import type { Movement } from "@src/core/movement/types"
+import MarkerNotFound from "@src/core/path/errors/marker-not-found.error"
 
 class Path {
 	#id
@@ -20,8 +21,6 @@ class Path {
 	#lastDestination: Movement["getDestination"]
 
 	#movements: Movement[] = []
-
-	#groupEl
 
 	#pathEl
 
@@ -47,9 +46,7 @@ class Path {
 
 		// dom
 		this.#pathEl = document.createElementNS(SVG_NAMESPACE, "path")
-		this.#groupEl = document.createElementNS(SVG_NAMESPACE, "g")
-		this.#groupEl.id = this.id
-		this.#groupEl.append(this.#pathEl)
+		this.#pathEl.id = this.id
 	}
 
 	static get #defaultOptions(): PathOptions {
@@ -62,7 +59,7 @@ class Path {
 		return this.#id
 	}
 
-	addHorizontal(length: number | LengthGetter) {
+	addHorizontal(length: number | LengthGetter, marker?: string) {
 		const getLength = this.#getterize(length)
 
 		const getOrigin = this.#lastDestination.bind({})
@@ -75,6 +72,7 @@ class Path {
 				getOrigin,
 				getDisplacementDestination,
 				() => new Vector2d(getDisplacementDestination(), getOrigin()),
+				marker,
 			),
 		)
 
@@ -83,7 +81,7 @@ class Path {
 		return this
 	}
 
-	addVertical(length: number | LengthGetter) {
+	addVertical(length: number | LengthGetter, marker?: string) {
 		const getLength = this.#getterize(length)
 
 		const getOrigin = this.#lastDestination.bind({})
@@ -96,6 +94,7 @@ class Path {
 				getOrigin,
 				getDisplacementDestination,
 				() => new Vector2d(getDisplacementDestination(), getOrigin()),
+				marker,
 			),
 		)
 
@@ -104,7 +103,7 @@ class Path {
 		return this
 	}
 
-	addDiagonal(length: Coordinates2d | Coordinates2dGetter) {
+	addDiagonal(length: Coordinates2d | Coordinates2dGetter, marker?: string) {
 		const getLength = this.#getterize(length)
 
 		const getOrigin = this.#lastDestination.bind({})
@@ -119,6 +118,7 @@ class Path {
 				getOrigin,
 				getDisplacementDestination,
 				() => new Vector2d(getDisplacementDestination(), getOrigin()),
+				marker,
 			),
 		)
 
@@ -131,6 +131,7 @@ class Path {
 		length: Coordinates2d | Coordinates2dGetter,
 		startControl: Coordinates2d | Coordinates2dGetter,
 		endControl: Coordinates2d | Coordinates2dGetter,
+		marker?: string,
 	) {
 		const getLength = this.#getterize(length)
 		const getStartControl = this.#getterize(startControl) // starts from origin
@@ -162,6 +163,7 @@ class Path {
 						getEndControlDestination(),
 						getDisplacementDestination(),
 					),
+				marker,
 			),
 		)
 
@@ -173,6 +175,7 @@ class Path {
 	addQuadratic(
 		length: Coordinates2d | Coordinates2dGetter,
 		control: Coordinates2d | Coordinates2dGetter,
+		marker?: string,
 	) {
 		const getLength = this.#getterize(length)
 		const getControl = this.#getterize(control) // starts from origin
@@ -194,6 +197,7 @@ class Path {
 				getDisplacementDestination,
 				() => new Vector2d(getDisplacementDestination(), getOrigin()),
 				() => new Vector2d(getControlDestination(), getOrigin()),
+				marker,
 			),
 		)
 
@@ -203,7 +207,7 @@ class Path {
 	}
 
 	getElement() {
-		return this.#groupEl
+		return this.#pathEl
 	}
 
 	updateElement() {
@@ -251,11 +255,32 @@ class Path {
 		} satisfies PathInternals)
 	}
 
+	createPartial(marker: string, options?: Partial<PathOptions>) {
+		const index = this.#movements.findIndex(
+			(movement) => movement.marker === marker,
+		)
+		if (index === -1) throw new MarkerNotFound(marker)
+
+		const pathOptions = { ...Path.#defaultOptions, ...options }
+		const movements = this.#movements
+			.slice(0, index + 1)
+			.map((movement) => movement.clone())
+		const getLastDestination =
+			movements.at(-1)?.getDestination.bind({}) ||
+			this.#lastDestination.bind({})
+
+		return new Path(getLastDestination, pathOptions, {
+			movements,
+		} satisfies PathInternals)
+	}
+
 	clone(options?: Partial<PathOptions>) {
 		const pathOptions = { ...Path.#defaultOptions, ...options }
+		const movements = this.#movements.map((movement) => movement.clone())
+		const getLastDestination = this.#lastDestination.bind({})
 
-		return new Path(this.#lastDestination.bind({}), pathOptions, {
-			movements: this.#movements.map((movement) => movement.clone()),
+		return new Path(getLastDestination, pathOptions, {
+			movements,
 		} satisfies PathInternals)
 	}
 
