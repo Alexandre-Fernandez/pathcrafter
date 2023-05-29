@@ -26,6 +26,16 @@ import Layout from "../layouts/Layout.astro"
 <script>
 	import { Path, Svg } from "pathcrafter"
 
+	/*
+		Path.xy(400, 50)
+		Path.distance("#path1", "#path2")
+		Path.edgePoint("#path1")
+
+		Kit.xy(400,500)
+
+		getElementEdgePoint("#path1", "top", 50)
+	*/
+
 	const path1 = new Path({ x: 400, y: 50 }, { id: "test" })
 		.addHorizontal(400)
 		.addVertical(50)

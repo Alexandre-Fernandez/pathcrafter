@@ -1,3 +1,5 @@
+import { Rect } from "@lib/dom/types"
+
 export function getBoundingDocumentRect(element: Element) {
 	const box = element.getBoundingClientRect()
 
@@ -27,7 +29,7 @@ export function getBoundingDocumentRect(element: Element) {
 		bottom: y + box.height,
 		width: box.width,
 		height: box.height,
-	} satisfies Omit<DOMRect, "toJSON">
+	} as Rect
 }
 
 export function getDocumentSize() {
