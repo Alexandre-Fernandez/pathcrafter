@@ -1,5 +1,6 @@
 import { getBoundingDocumentRect } from "@lib/dom"
 import Point2d from "@lib/geometry/2d/point2d.class"
+import Rect2d from "@lib/geometry/2d/rect2d.class"
 import { Coordinates2d } from "@lib/geometry/2d/types"
 import UnexpectedError from "@src/errors/unexpected-error.error"
 import ElementNotFound from "@src/utilities/errors/element-not-found.error"
@@ -46,7 +47,14 @@ export function edgePoint(
 }
 
 export function gapRect(element1: SelectorElement, element2: SelectorElement) {
-	//
+	const rect1 = Rect2d.fromDomRect(
+		getBoundingDocumentRect(selectorToElement(element1)),
+	)
+	const rect2 = Rect2d.fromDomRect(
+		getBoundingDocumentRect(selectorToElement(element2)),
+	)
+
+	rect1.getGap(rect2)
 }
 
 function selectorToElement(selectorElement: SelectorElement) {
