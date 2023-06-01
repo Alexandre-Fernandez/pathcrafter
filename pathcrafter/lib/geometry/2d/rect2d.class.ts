@@ -70,13 +70,13 @@ class Rect2d {
 
 	getIntersection(rect: Rect2d) {
 		const position = new Point2d(
-			Math.max(this.position.x, rect.position.x), // left
-			Math.max(this.position.y, rect.position.y), // top
+			Math.max(this.left, rect.left),
+			Math.max(this.top, rect.top),
 		)
 
 		const end = new Point2d(
-			Math.min(this.end.x, rect.end.x), // right
-			Math.min(this.end.y, rect.end.y), // bottom
+			Math.min(this.right, rect.right),
+			Math.min(this.bottom, rect.bottom),
 		)
 
 		return Rect2d.isValid(end, position) ? new Rect2d(end, position) : null
@@ -120,15 +120,5 @@ class Rect2d {
 		return Rect2d.isValid(end, position) ? new Rect2d(end, position) : null
 	}
 }
-
-/*
-// result
-// x4.58, y6.09
-// x5.86, y8.43
-
-const rect1 = Rect2d.fromCoordinates(5.86, 9.47, 1.7, 6.09)
-
-const rect2 = Rect2d.fromCoordinates(8.48, 13.35, 4.58, 7.13)
-*/
 
 export default Rect2d
