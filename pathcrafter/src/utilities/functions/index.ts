@@ -1,7 +1,7 @@
 import { getBoundingDocumentRect } from "@lib/dom"
+import { Coordinates2d } from "@lib/geometry/2d/types"
 import Point2d from "@lib/geometry/2d/point2d.class"
 import Rect2d from "@lib/geometry/2d/rect2d.class"
-import { Coordinates2d } from "@lib/geometry/2d/types"
 import UnexpectedError from "@src/errors/unexpected-error.error"
 import ElementNotFound from "@src/utilities/errors/element-not-found.error"
 import { Direction, SelectorElement } from "@src/utilities/types"
@@ -54,7 +54,39 @@ export function gapRect(element1: SelectorElement, element2: SelectorElement) {
 		getBoundingDocumentRect(selectorToElement(element2)),
 	)
 
-	rect1.getGap(rect2)
+	return rect1.getGap(rect2)
+}
+
+export function xGap(
+	element1: SelectorElement,
+	element2: SelectorElement,
+	percentage = 100,
+) {
+	const gap = getGap(element1, element2)
+	const pct = percentage * 0.01
+
+	return gap ? gap.width * pct : 0
+}
+
+export function yGap(
+	element1: SelectorElement,
+	element2: SelectorElement,
+	percentage = 100,
+) {
+	const gap = getGap(element1, element2)
+	const pct = percentage * 0.01
+
+	return gap ? gap.height * pct : 0
+}
+
+function getGap(element1: SelectorElement, element2: SelectorElement) {
+	const rect1 = Rect2d.fromDomRect(
+		getBoundingDocumentRect(selectorToElement(element1)),
+	)
+	const rect2 = Rect2d.fromDomRect(
+		getBoundingDocumentRect(selectorToElement(element2)),
+	)
+	return rect1.getGap(rect2, false)
 }
 
 function selectorToElement(selectorElement: SelectorElement) {

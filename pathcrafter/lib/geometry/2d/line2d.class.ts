@@ -17,7 +17,7 @@ class Line2d<T extends XLine2d | YLine2d = XLine2d | YLine2d> {
 		return Line2d.fromPoints(new Point2d(x1, y1), new Point2d(x2, y2))
 	}
 
-	intersects({ equation }: Line2d) {
+	getIntersection({ equation }: Line2d) {
 		if (this.equation instanceof YLine2d) {
 			return equation instanceof YLine2d
 				? this.#yyLineIntersection(this.equation, equation)

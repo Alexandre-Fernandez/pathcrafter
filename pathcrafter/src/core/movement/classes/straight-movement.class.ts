@@ -72,7 +72,7 @@ class StraightMovement {
 				.getDisplacement()
 				.perpendicularTranslate(gap)
 				.toLine2d()
-				.intersects(parallelDisplacement.toLine2d())
+				.getIntersection(parallelDisplacement.toLine2d())
 
 			if (previousIntersection) return previousIntersection
 			// no intersection, previous displacement is parallel
@@ -86,7 +86,7 @@ class StraightMovement {
 
 			const nextIntersection = parallelDisplacement
 				.toLine2d()
-				.intersects(
+				.getIntersection(
 					next
 						.getDisplacement()
 						.perpendicularTranslate(gap)

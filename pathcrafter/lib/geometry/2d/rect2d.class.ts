@@ -82,9 +82,9 @@ class Rect2d {
 		return Rect2d.isValid(end, position) ? new Rect2d(end, position) : null
 	}
 
-	getGap(rect: Rect2d) {
+	getGap(rect: Rect2d, returnIntersection = true) {
 		const intersection = this.getIntersection(rect)
-		if (intersection) return intersection
+		if (intersection) return returnIntersection ? intersection : null
 
 		let left = 0
 		let right = 0
@@ -118,6 +118,10 @@ class Rect2d {
 		const end = new Point2d(right, bottom)
 
 		return Rect2d.isValid(end, position) ? new Rect2d(end, position) : null
+	}
+
+	toString() {
+		return `⇱${this.position.toString()} ⇲${this.end.toString()}`
 	}
 }
 
