@@ -1,4 +1,4 @@
-import Point2d from "@lib/geometry/2d/point2d.class"
+import Point2d from "@lib/geometry/2d/classes/point2d.class"
 import StraightMovement from "@src/core/movement/classes/straight-movement.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type {

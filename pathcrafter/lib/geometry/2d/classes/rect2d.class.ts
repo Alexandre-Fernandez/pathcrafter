@@ -1,4 +1,4 @@
-import Point2d from "@lib/geometry/2d/point2d.class"
+import Point2d from "@lib/geometry/2d/classes/point2d.class"
 import InvalidRect from "@lib/geometry/errors/invalid-rect"
 
 class Rect2d {

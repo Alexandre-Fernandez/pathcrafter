@@ -1,6 +1,6 @@
-import Point2d from "@lib/geometry/2d/point2d.class"
-import XLine2d from "@lib/geometry/2d/x-line2d.class"
-import YLine2d from "@lib/geometry/2d/y-line2d.class"
+import Point2d from "@lib/geometry/2d/classes/point2d.class"
+import XLine2d from "@lib/geometry/2d/classes/line2d/x-line2d.class"
+import YLine2d from "@lib/geometry/2d/classes/line2d/y-line2d.class"
 
 class Line2d<T extends XLine2d | YLine2d = XLine2d | YLine2d> {
 	constructor(public equation: T) {}

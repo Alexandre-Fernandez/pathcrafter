@@ -1,6 +1,6 @@
-import Point2d from "@lib/geometry/2d/point2d.class"
+import Point2d from "@lib/geometry/2d/classes/point2d.class"
+import Vector2d from "@lib/geometry/2d/classes/vector2d.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
-import Vector2d from "@lib/geometry/2d/vector2d.class"
 import type { Movement } from "@src/core/movement/types"
 import type {
 	Coordinates2dGetter,
