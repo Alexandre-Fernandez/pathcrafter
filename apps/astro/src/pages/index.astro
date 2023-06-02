@@ -24,7 +24,17 @@ import Layout from "../layouts/Layout.astro"
 </Layout>
 
 <script>
-	import { Path, Svg } from "pathcrafter"
+	import { Path, Tools, pathcrafter } from "pathcrafter"
+
+	const start = document.querySelector("#start")
+	const end = document.querySelector("#end")
+
+	// getters take current position as param
+	const path1 = new Path(Tools.edgePoint(start, "bottom", 50))
+		.addVertical(50)
+		.addHorizontal(Tools.xGap(start, end, 50))
+
+	pathcrafter([path1])
 
 	/*
 		Path.xy(400, 50)
@@ -36,23 +46,25 @@ import Layout from "../layouts/Layout.astro"
 		getElementEdgePoint("#path1", "top", 50)
 	*/
 
-	const path1 = new Path({ x: 400, y: 50 }, { id: "test" })
-		.addHorizontal(400)
-		.addVertical(50)
-		.addHorizontal(50, "xd")
-		.addVertical(50)
-		.addHorizontal(50)
-		.addVertical(50)
-		.addDiagonal({ x: -500, y: 500 })
+	// const path1 = new Path({ x: 400, y: 50 }, { id: "test" })
+	// 	.addHorizontal(400)
+	// 	.addVertical(50)
+	// 	.addHorizontal(50, "xd")
+	// 	.addVertical(50)
+	// 	.addHorizontal(50)
+	// 	.addVertical(50)
+	// 	.addDiagonal({ x: -500, y: 500 })
 
-	const path2 = path1.createParallel(10)
+	// const path2 = path1.createParallel(10)
 
-	const path3 = path1
-		.createParallel(-10)
-		.createPartial("xd")
-		.addDiagonal({ x: 50, y: -50 })
+	// const path3 = path1
+	// 	.createParallel(-10)
+	// 	.createPartial("xd")
+	// 	.addDiagonal({ x: 50, y: -50 })
 
-	new Svg([path1, path2, path3])
+	// const { update } = pathcrafter([path1, path2, path3])
+
+	// window.addEventListener("resize", update)
 
 	/*
 	const group = document.querySelector("#test")
