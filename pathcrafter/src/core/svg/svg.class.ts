@@ -1,16 +1,17 @@
-import { getDocumentSize } from "@lib/dom"
+import { generateUniqueId, getDocumentSize } from "@lib/dom"
 import { SVG_NAMESPACE } from "@src/constants"
 import { SvgOptions } from "@src/core/svg/types"
 import { classes } from "@src/styles"
-import Styles from "@src/core/global/styles.class"
 import Path from "@src/core/path/classes/path.class"
 
 class Svg implements SvgOptions {
-	fill = "none"
+	fill: string
 
-	stroke = "black"
+	stroke: string
 
-	strokeWidth: string | number = 2
+	strokeWidth: string | number
+
+	#id: string
 
 	#divEl = document.createElement("div")
 
@@ -18,34 +19,75 @@ class Svg implements SvgOptions {
 
 	#paths
 
-	constructor(paths: Path[] = []) {
-		Styles.init()
+	constructor(paths: Path[] = [], options: Partial<SvgOptions> = {}) {
 		this.#divEl.classList.add(classes.container)
 
+		// adding paths to svg
 		this.#paths = paths
 		for (const path of this.#paths) {
 			this.#svgEl.append(path.updateElement().getElement())
 		}
 
+		// init options
+		const { id, fill, stroke, strokeWidth } = {
+			...Svg.defaultOptions,
+			...options,
+		}
+		this.#id = id
+		this.fill = fill
+		this.stroke = stroke
+		this.strokeWidth = strokeWidth
+
+		this.#updateSize()
 		this.#updateAttributes()
+
+		// dom
 		this.#divEl.append(this.#svgEl)
 		document.body.append(this.#divEl)
 	}
 
-	#updateAttributes() {
+	static get defaultOptions(): SvgOptions {
+		return {
+			id: generateUniqueId(),
+			fill: "none",
+			stroke: "black",
+			strokeWidth: 2,
+		}
+	}
+
+	get id() {
+		return this.#id
+	}
+
+	update() {
+		return this.#updateSize().#updatePaths().#updateAttributes()
+	}
+
+	#updatePaths() {
+		for (const path of this.#paths) {
+			path.updateElement()
+		}
+		return this
+	}
+
+	#updateSize() {
 		const { width, height } = getDocumentSize()
 		this.#svgEl.setAttribute("width", `${width}`)
 		this.#svgEl.setAttribute("height", `${height}`)
-
-		this.#svgEl.setAttribute("fill", this.fill)
-		this.#svgEl.setAttribute("stroke", this.stroke)
-		this.#svgEl.setAttribute("stroke-width", `${this.strokeWidth}`)
 
 		const offset = Number(this.strokeWidth) * 0.5
 		this.#svgEl.setAttribute(
 			"viewBox",
 			`-${offset} -${offset} ${width} ${height}`,
 		)
+		return this
+	}
+
+	#updateAttributes() {
+		this.#svgEl.setAttribute("fill", this.fill)
+		this.#svgEl.setAttribute("stroke", this.stroke)
+		this.#svgEl.setAttribute("stroke-width", `${this.strokeWidth}`)
+		return this
 	}
 }
 

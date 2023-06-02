@@ -10,7 +10,6 @@ import QuadraticMovement from "@src/core/movement/classes/quadratic-movement.cla
 import EmptyMovements from "@src/core/path/errors/empty-movements.error"
 import UnexpectedError from "@src/errors/unexpected-error.error"
 import MarkerNotFound from "@src/core/path/errors/marker-not-found.error"
-import { isPath } from "@src/core/path/guards/path.guard"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type { Coordinates2dGetter, LengthGetter } from "@src/types"
 import type { PathInternals, PathOptions } from "@src/core/path/types"
@@ -18,8 +17,6 @@ import type { Movement } from "@src/core/movement/types"
 
 class Path {
 	#id
-
-	#parent: Path | null = null
 
 	#lastDestination: Movement["getDestination"]
 
@@ -36,10 +33,6 @@ class Path {
 		if (internals["movements"]) {
 			assertGuard(internals["movements"], isMovementArray)
 			this.#movements = internals["movements"]
-		}
-		if (internals["parent"]) {
-			assertGuard(internals["parent"], isPath)
-			this.#parent = internals["parent"]
 		}
 
 		// props
@@ -64,10 +57,6 @@ class Path {
 
 	get id() {
 		return this.#id
-	}
-
-	get parent() {
-		return this.#parent
 	}
 
 	addHorizontal(length: number | LengthGetter, marker?: string) {
@@ -263,7 +252,6 @@ class Path {
 
 		return new Path(getLastDestination, pathOptions, {
 			movements,
-			parent: this,
 		} satisfies PathInternals)
 	}
 
@@ -283,7 +271,6 @@ class Path {
 
 		return new Path(getLastDestination, pathOptions, {
 			movements,
-			parent: this,
 		} satisfies PathInternals)
 	}
 
@@ -294,7 +281,6 @@ class Path {
 
 		return new Path(getLastDestination, pathOptions, {
 			movements,
-			parent: this,
 		} satisfies PathInternals)
 	}
 
