@@ -1,8 +1,8 @@
 import { generateUniqueId, getDocumentSize } from "@lib/dom"
 import { SVG_NAMESPACE } from "@src/constants"
-import { SvgOptions } from "@src/core/svg/types"
 import { classes } from "@src/styles"
 import Path from "@src/core/path/classes/path.class"
+import type { SvgOptions } from "@src/core/svg/types"
 
 class Svg implements SvgOptions {
 	fill: string

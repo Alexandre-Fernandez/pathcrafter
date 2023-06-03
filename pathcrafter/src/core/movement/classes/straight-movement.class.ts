@@ -27,7 +27,7 @@ class StraightMovement {
 			)
 
 		const clonedGetDestination = this.getDestination.bind({})
-		this.getOrigin = () =>
+		this.getDestination = () =>
 			clonedGetDestination().add(
 				Point2d.fromCoordinates2d(translationGetter()),
 			)
