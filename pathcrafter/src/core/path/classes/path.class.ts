@@ -284,8 +284,10 @@ class Path {
 		} satisfies PathInternals)
 	}
 
-	#getterize<T, U extends () => T>(value: Exclude<T, Function> | U): () => T {
-		return typeof value === "function" ? (value as U) : () => value
+	#getterize<T>(value: T) {
+		return typeof value === "function"
+			? (value as Extract<T, Function>)
+			: () => value as Exclude<T, Function>
 	}
 }
 
