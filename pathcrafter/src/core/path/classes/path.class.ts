@@ -11,8 +11,12 @@ import EmptyMovements from "@src/core/path/errors/empty-movements.error"
 import UnexpectedError from "@src/errors/unexpected-error.error"
 import MarkerNotFound from "@src/core/path/errors/marker-not-found.error"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
-import type { Coordinates2dGetter, LengthGetter } from "@src/types"
-import type { PathInternals, PathOptions } from "@src/core/path/types"
+import type {
+	Coordinates2dGetter,
+	LengthGetter,
+	PathInternals,
+	PathOptions,
+} from "@src/core/path/types"
 import type { Movement } from "@src/core/movement/types"
 
 class Path {

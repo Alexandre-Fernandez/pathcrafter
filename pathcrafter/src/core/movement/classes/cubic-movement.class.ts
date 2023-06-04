@@ -5,7 +5,7 @@ import type {
 	Coordinates2dGetter,
 	Point2dGetter,
 	Vector2dGetter,
-} from "@src/types"
+} from "@src/core/path/types"
 
 class CubicMovement extends StraightMovement {
 	constructor(
