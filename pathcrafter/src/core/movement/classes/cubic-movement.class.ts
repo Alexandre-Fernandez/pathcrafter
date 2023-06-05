@@ -1,11 +1,13 @@
 import Point2d from "@lib/geometry/2d/classes/point2d.class"
 import StraightMovement from "@src/core/movement/classes/straight-movement.class"
+import NullDestination from "@src/core/movement/errors/null-destination.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type {
 	Coordinates2dGetter,
 	Point2dGetter,
 	Vector2dGetter,
 } from "@src/core/path/types"
+import type { SegmentDestination } from "@src/core/movement/types"
 
 class CubicMovement extends StraightMovement {
 	constructor(
@@ -24,45 +26,47 @@ class CubicMovement extends StraightMovement {
 			typeof translation === "function" ? translation : () => translation
 
 		const clonedGetOrigin = this.getOrigin.bind({})
-		this.getOrigin = () =>
-			clonedGetOrigin().add(
-				Point2d.fromCoordinates2d(translationGetter()),
+		this.getOrigin = (lastPosition: Point2d) =>
+			clonedGetOrigin(lastPosition).add(
+				Point2d.fromCoordinates2d(translationGetter(lastPosition)),
 			)
 
 		const clonedGetDestination = this.getDestination.bind({})
-		this.getDestination = () =>
-			clonedGetDestination().add(
-				Point2d.fromCoordinates2d(translationGetter()),
+		this.getDestination = (lastPosition: Point2d) =>
+			clonedGetDestination(lastPosition).add(
+				Point2d.fromCoordinates2d(translationGetter(lastPosition)),
 			)
 
 		const clonedGetDisplacement = this.getDisplacement.bind({})
-		this.getDisplacement = () => {
-			const { x, y } = translationGetter()
-			return clonedGetDisplacement().translate(x, y)
+		this.getDisplacement = (lastPosition: Point2d) => {
+			const { x, y } = translationGetter(lastPosition)
+			return clonedGetDisplacement(lastPosition).translate(x, y)
 		}
 
 		const clonedGetStartControl = this.getStartControl.bind({})
-		this.getStartControl = () => {
-			const { x, y } = translationGetter()
-			return clonedGetStartControl().translate(x, y)
+		this.getStartControl = (lastPosition: Point2d) => {
+			const { x, y } = translationGetter(lastPosition)
+			return clonedGetStartControl(lastPosition).translate(x, y)
 		}
 
 		const clonedGetEndControl = this.getEndControl.bind({})
-		this.getEndControl = () => {
-			const { x, y } = translationGetter()
-			return clonedGetEndControl().translate(x, y)
+		this.getEndControl = (lastPosition: Point2d) => {
+			const { x, y } = translationGetter(lastPosition)
+			return clonedGetEndControl(lastPosition).translate(x, y)
 		}
 
 		return this
 	}
 
-	override toSegment(isStart = false) {
-		const { tail, head } = this.getDisplacement()
-		const { head: startControl } = this.getStartControl()
-		const { head: endControl } = this.getEndControl()
-		return isStart
-			? `M${tail.x} ${tail.y} C${startControl.x} ${startControl.y},${endControl.x} ${endControl.y},${head.x} ${head.y}`
-			: `C${startControl.x} ${startControl.y},${endControl.x} ${endControl.y},${head.x} ${head.y}`
+	override toSegment(
+		{ displacement, startControl, endControl }: SegmentDestination,
+		startingPoint?: Point2d,
+	) {
+		if (!startControl) throw new NullDestination("startControl")
+		if (!endControl) throw new NullDestination("endControl")
+		return startingPoint
+			? `M${startingPoint.x} ${startingPoint.y} C${startControl.x} ${startControl.y},${endControl.x} ${endControl.y},${displacement.x} ${displacement.y}`
+			: `C${startControl.x} ${startControl.y},${endControl.x} ${endControl.y},${displacement.x} ${displacement.y}`
 	}
 
 	override clone() {

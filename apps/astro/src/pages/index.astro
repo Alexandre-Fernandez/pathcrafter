@@ -31,10 +31,43 @@ import Layout from "../layouts/Layout.astro"
 
 	// getters take current position as param
 	const path1 = new Path(Tools.edgePoint(start, "bottom", 50))
-		.addVertical(50)
-		.addHorizontal(Tools.xGap(start, end, 50))
+		.addVertical((pos) => {
+			console.log(">>> 1. vertical:", pos)
+			return 50
+		})
+		.addHorizontal((pos) => {
+			console.log(">>> 2. horizontal:", pos)
+			return Tools.xGap(start, end, 50)
+		}, "x")
+		.addDiagonal((pos) => {
+			console.log(">>> 3. diagonal:", pos)
+			return { x: 50, y: 50 }
+		})
+	// .addQuadratic(
+	// 	(pos) => {
+	// 		console.log(">>> 4a. quad:", pos)
+	// 		return { x: 0, y: 100 }
+	// 	},
+	// 	(pos) => {
+	// 		console.log(">>> 4b. quad:", pos)
+	// 		return { x: 50, y: 50 }
+	// 	},
+	// )
 
-	pathcrafter([path1])
+	const path2 = path1.deriveParallel(10).addVertical((pos) => {
+		console.log(">>> parallel. vertical:", pos)
+		return 50
+	})
+
+	const path3 = path2
+		.deriveParallel(10)
+		.derivePartial("x")
+		.addVertical((pos) => {
+			console.log(">>> partial. vertical:", pos)
+			return 50
+		})
+
+	pathcrafter([path1, path2, path3])
 
 	/*
 		Path.xy(400, 50)

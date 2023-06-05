@@ -1,4 +1,5 @@
-import { generateUniqueId, getDocumentSize } from "@lib/dom"
+import { uid } from "@lib/string"
+import { getDocumentSize } from "@lib/dom"
 import { SVG_NAMESPACE } from "@src/constants"
 import { classes } from "@src/styles"
 import Path from "@src/core/path/classes/path.class"
@@ -27,6 +28,7 @@ class Svg implements SvgOptions {
 		for (const path of this.#paths) {
 			this.#svgEl.append(path.updateElement().getElement())
 		}
+		this.#clearCaches() // clear caches for next run
 
 		// init options
 		const { id, fill, stroke, strokeWidth } = {
@@ -48,7 +50,7 @@ class Svg implements SvgOptions {
 
 	static get defaultOptions(): SvgOptions {
 		return {
-			id: generateUniqueId(),
+			id: `_${uid()}`,
 			fill: "none",
 			stroke: "black",
 			strokeWidth: 2,
@@ -60,7 +62,10 @@ class Svg implements SvgOptions {
 	}
 
 	update() {
-		return this.#updateSize().#updatePaths().#updateAttributes()
+		return this.#updateSize()
+			.#updatePaths()
+			.#updateAttributes()
+			.#clearCaches()
 	}
 
 	#updatePaths() {
@@ -87,6 +92,13 @@ class Svg implements SvgOptions {
 		this.#svgEl.setAttribute("fill", this.fill)
 		this.#svgEl.setAttribute("stroke", this.stroke)
 		this.#svgEl.setAttribute("stroke-width", `${this.strokeWidth}`)
+		return this
+	}
+
+	#clearCaches() {
+		for (const path of this.#paths) {
+			path.clearCache()
+		}
 		return this
 	}
 }

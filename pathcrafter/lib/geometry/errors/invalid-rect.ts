@@ -1,4 +1,4 @@
-import Point2d from "@lib/geometry/2d/point2d.class"
+import type Point2d from "@lib/geometry/2d/classes/point2d.class"
 
 class InvalidRect extends Error {
 	constructor(position?: Point2d, end?: Point2d) {

@@ -1,7 +1,7 @@
 import Point2d from "@lib/geometry/2d/classes/point2d.class"
 import Vector2d from "@lib/geometry/2d/classes/vector2d.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
-import type { Movement } from "@src/core/movement/types"
+import type { Movement, SegmentDestination } from "@src/core/movement/types"
 import type {
 	Coordinates2dGetter,
 	Point2dGetter,
@@ -21,31 +21,30 @@ class StraightMovement {
 			typeof translation === "function" ? translation : () => translation
 
 		const clonedGetOrigin = this.getOrigin.bind({})
-		this.getOrigin = () =>
-			clonedGetOrigin().add(
-				Point2d.fromCoordinates2d(translationGetter()),
+		this.getOrigin = (lastPosition: Point2d) =>
+			clonedGetOrigin(lastPosition).add(
+				Point2d.fromCoordinates2d(translationGetter(lastPosition)),
 			)
 
 		const clonedGetDestination = this.getDestination.bind({})
-		this.getDestination = () =>
-			clonedGetDestination().add(
-				Point2d.fromCoordinates2d(translationGetter()),
+		this.getDestination = (lastPosition: Point2d) =>
+			clonedGetDestination(lastPosition).add(
+				Point2d.fromCoordinates2d(translationGetter(lastPosition)),
 			)
 
 		const clonedGetDisplacement = this.getDisplacement.bind({})
-		this.getDisplacement = () => {
-			const { x, y } = translationGetter()
-			return clonedGetDisplacement().translate(x, y)
+		this.getDisplacement = (lastPosition: Point2d) => {
+			const { x, y } = translationGetter(lastPosition)
+			return clonedGetDisplacement(lastPosition).translate(x, y)
 		}
 
 		return this
 	}
 
-	toSegment(isStart = false) {
-		const { tail, head } = this.getDisplacement()
-		return isStart
-			? `M${tail.x} ${tail.y} L${head.x} ${head.y}`
-			: `L${head.x} ${head.y}`
+	toSegment({ displacement }: SegmentDestination, startingPoint?: Point2d) {
+		return startingPoint
+			? `M${startingPoint.x} ${startingPoint.y} L${displacement.x} ${displacement.y}`
+			: `L${displacement.x} ${displacement.y}`
 	}
 
 	clone() {
@@ -63,13 +62,13 @@ class StraightMovement {
 	) {
 		const clonedGetDisplacement = this.getDisplacement.bind({})
 
-		const getOrigin = () => {
+		const getOrigin = (lastPosition: Point2d) => {
 			const parallelDisplacement =
-				clonedGetDisplacement().perpendicularTranslate(gap)
+				clonedGetDisplacement(lastPosition).perpendicularTranslate(gap)
 			if (!previous) return parallelDisplacement.tail
 
 			const previousIntersection = previous
-				.getDisplacement()
+				.getDisplacement(lastPosition)
 				.perpendicularTranslate(gap)
 				.toLine2d()
 				.getIntersection(parallelDisplacement.toLine2d())
@@ -79,16 +78,16 @@ class StraightMovement {
 			return parallelDisplacement.tail
 		}
 
-		const getDestination = () => {
+		const getDestination = (lastPosition: Point2d) => {
 			const parallelDisplacement =
-				clonedGetDisplacement().perpendicularTranslate(gap)
+				clonedGetDisplacement(lastPosition).perpendicularTranslate(gap)
 			if (!next) return parallelDisplacement.head
 
 			const nextIntersection = parallelDisplacement
 				.toLine2d()
 				.getIntersection(
 					next
-						.getDisplacement()
+						.getDisplacement(lastPosition)
 						.perpendicularTranslate(gap)
 						.toLine2d(),
 				)
@@ -101,7 +100,11 @@ class StraightMovement {
 		return new StraightMovement(
 			getOrigin,
 			getDestination,
-			() => new Vector2d(getDestination(), getOrigin()),
+			(lastPosition: Point2d) =>
+				new Vector2d(
+					getDestination(lastPosition),
+					getOrigin(lastPosition),
+				),
 			this.marker,
 		)
 	}

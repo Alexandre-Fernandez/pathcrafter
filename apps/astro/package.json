@@ -12,6 +12,7 @@
 	"devDependencies": {
 		"af-prettierrc": "^1.0.0",
 		"af-tsconfig": "^1.0.2",
+		"astro": "^2.5.0",
 		"eslint": "^8.40.0",
 		"eslint-config-af-typescript": "^1.6.0",
 		"eslint-plugin-astro": "^0.27.0",
@@ -19,7 +20,9 @@
 		"prettier-plugin-astro": "^0.8.1"
 	},
 	"dependencies": {
-		"astro": "^2.4.1",
 		"pathcrafter": "workspace:*"
+	},
+	"peerDependencies": {
+		"astro": "^2.5.0"
 	}
 }

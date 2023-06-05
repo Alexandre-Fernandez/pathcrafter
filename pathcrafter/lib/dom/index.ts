@@ -1,4 +1,4 @@
-import { Rect } from "@lib/dom/types"
+import type { Rect } from "@lib/dom/types"
 
 export function getBoundingDocumentRect(element: Element) {
 	const box = element.getBoundingClientRect()
@@ -49,24 +49,4 @@ export function getDocumentSize() {
 			document.documentElement.offsetHeight,
 		),
 	}
-}
-
-let counter = Number.MIN_SAFE_INTEGER
-const UID_LENGTH = 18 // minimum size: 18 ("_" + MIN_SAFE_INTEGER.length)
-export function generateUniqueId() {
-	let uid = counter.toString()
-	const purgedUid = uid.replace("-", "")
-	const padding = UID_LENGTH - (purgedUid.length + 2)
-	uid =
-		uid.at(0) === "-"
-			? `_0${"0".repeat(padding)}${purgedUid}`
-			: `_1${"0".repeat(padding)}${purgedUid}`
-
-	if (counter >= Number.MAX_SAFE_INTEGER) {
-		counter = Number.MIN_SAFE_INTEGER
-	} else {
-		counter += 1
-	}
-
-	return uid
 }

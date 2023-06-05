@@ -11,10 +11,12 @@ export type PathOptions = {
 	id: string
 }
 
-export type LengthGetter = () => number
+export type PathStartingPoint = () => Point2d
 
-export type Vector2dGetter = () => Vector2d
+export type LengthGetter = (lastPosition: Point2d) => number
 
-export type Point2dGetter = () => Point2d
+export type Vector2dGetter = (lastPosition: Point2d) => Vector2d
 
-export type Coordinates2dGetter = () => Coordinates2d
+export type Point2dGetter = (lastPosition: Point2d) => Point2d
+
+export type Coordinates2dGetter = (lastPosition: Point2d) => Coordinates2d
