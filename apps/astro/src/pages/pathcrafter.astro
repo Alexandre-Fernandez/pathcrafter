@@ -58,7 +58,8 @@ import Layout from "../layouts/Layout.astro"
 		const { x, y } = getElementEdgePoint(div, "top", 3)
 		return { x, y: y }
 	}).addHorizontal(() => getElementRect(div).width * 0.97)
-	const tTopB = tTopA.deriveParallel(-15)
+	const tTopB = tTopA.deriveParallel(-12)
+	const tTopC = tTopA.deriveParallel(-15)
 	const t1a = new Path(() => getElementEdgePoint(div, "bottom", 14), {
 		fill: "black",
 	})
@@ -111,6 +112,64 @@ import Layout from "../layouts/Layout.astro"
 	const rB = rA.derivePartial("vert").deriveParallel(4)
 	const rC = rB.deriveParallel(6)
 
+	// A
+	const a2a = new Path(() => getElementEdgePoint(div, "bottom", 48))
+		.addDiagonal((pos) =>
+			getDistance(pos, getElementEdgePoint(div, "top", 51)),
+		)
+		.addDiagonal((pos) =>
+			getDistance(pos, getElementEdgePoint(div, "bottom", 54)),
+		)
+	const a2b = a2a.deriveParallel(4)
+	const a2c = a2b.deriveParallel(5)
+	const a2d = a2c.deriveParallel(6)
+	const a2e = new Path(
+		() => {
+			const { x } = getElementEdgePoint(div, "bottom", 48)
+			const { y } = getElementEdgePoint(div, "left", 50)
+			return { x, y }
+		},
+		{ fill: "black" },
+	)
+		.addHorizontal(() => getElementRect(div).width * 0.14)
+		.addVertical(10)
+		.addHorizontal(() => getElementRect(div).width * -0.14)
+
+	// F
+	const fA = new Path(() => getElementEdgePoint(div, "bottom", 57))
+		.addVertical(() => getElementRect(div).height * -1)
+		.addHorizontal(() => getElementRect(div).width * 0.1)
+	const fB = fA.deriveParallel(5)
+	const fC = fB.deriveParallel(5)
+
+	// T
+	const t2A = new Path(() =>
+		getElementEdgePoint(div, "bottom", 69.5),
+	).addVertical(() => getElementRect(div).height * -1)
+	const t2B = t2A.deriveParallel(6)
+	const t2C = t2A.deriveParallel(-6)
+	const t2D = t2B.deriveParallel(3)
+	const t2E = t2C.deriveParallel(-3)
+
+	// E
+	const eA = new Path(() => getElementEdgePoint(div, "bottom", 85))
+		.addHorizontal(
+			(pos) => getDistance(pos, getElementEdgePoint(div, "bottom", 72)).x,
+		)
+		.addVertical(() => getElementRect(div).height * -1)
+		.addHorizontal(
+			(pos) => getDistance(pos, getElementEdgePoint(div, "bottom", 85)).x,
+		)
+	const eB = eA.deriveParallel(5)
+	const eC = eB.deriveParallel(10)
+	const eD = new Path(() => {
+		const { x } = getElementEdgePoint(div, "bottom", 72)
+		const { y } = getElementEdgePoint(div, "left", 50)
+		return createPoint2d(x, y)
+	}).addHorizontal(() => getElementRect(div).width * 0.08)
+
+	// R
+
 	const { update } = pathcrafter([
 		// P
 		p1a,
@@ -126,6 +185,7 @@ import Layout from "../layouts/Layout.astro"
 		// T
 		tTopA,
 		tTopB,
+		tTopC,
 		t1a,
 		// H
 		hA,
@@ -143,6 +203,27 @@ import Layout from "../layouts/Layout.astro"
 		rB,
 		rC,
 		// A
+		a2a,
+		a2b,
+		a2c,
+		a2d,
+		a2e,
+		// F
+		fA,
+		fB,
+		fC,
+		// T
+		t2A,
+		t2B,
+		t2C,
+		t2D,
+		t2E,
+		// E
+		eA,
+		eB,
+		eC,
+		eD,
+		// R
 	])
 	window.addEventListener("resize", update)
 </script>
