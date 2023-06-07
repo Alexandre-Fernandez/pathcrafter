@@ -15,7 +15,10 @@ export function pathcrafter(
 	options: Partial<PathcrafterOptions> = {},
 ) {
 	Styles.init()
-	return new Svg(paths, options)
+	const svg = new Svg(paths, options)
+	return {
+		update: svg.update.bind(svg),
+	}
 }
 
 export type { Coordinates2d } from "@lib/geometry/2d/types"

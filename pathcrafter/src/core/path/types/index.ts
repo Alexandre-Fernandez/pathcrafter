@@ -9,6 +9,7 @@ export type PathInternals = {
 
 export type PathOptions = {
 	id: string
+	fill: string
 }
 
 export type PathStartingPoint = () => Point2d

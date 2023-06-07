@@ -5,7 +5,7 @@ import Rect2d from "@lib/geometry/2d/classes/rect2d.class"
 import Vector2d from "@lib/geometry/2d/classes/vector2d.class"
 import UnexpectedError from "@src/errors/unexpected-error.error"
 import ElementNotFound from "@src/core/measuring/errors/element-not-found.error"
-import { Direction, SelectorElement } from "@src/core/measuring/types"
+import type { Direction, SelectorElement } from "@src/core/measuring/types"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 
 export function createPoint2d(x: number, y: number) {

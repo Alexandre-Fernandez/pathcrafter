@@ -22,6 +22,8 @@ import type {
 } from "@src/core/path/types"
 
 class Path {
+	fill
+
 	#id
 
 	#startingPoint: PathStartingPoint
@@ -59,17 +61,20 @@ class Path {
 			)
 			return new Point2d(x, y)
 		}
-		const { id } = this.#createOptions(options)
+		const { id, fill } = this.#createOptions(options)
 		this.#id = id
+		this.fill = fill
 
 		// dom
 		this.#pathEl = document.createElementNS(SVG_NAMESPACE, "path")
-		this.#pathEl.id = this.id
+		this.#pathEl.setAttribute("id", this.id)
+		this.#pathEl.setAttribute("fill", this.fill)
 	}
 
 	static get #defaultOptions(): PathOptions {
 		return {
 			id: `_${uid()}`,
+			fill: "none",
 		}
 	}
 
@@ -278,7 +283,7 @@ class Path {
 		return this.#pathEl
 	}
 
-	/** Updates the DOM element's `d` attribute. */
+	/** Updates the DOM element's attributes. */
 	updateElement() {
 		let d = ""
 
@@ -310,6 +315,7 @@ class Path {
 		}
 
 		this.#pathEl.setAttribute("d", d)
+		this.#pathEl.setAttribute("fill", this.fill)
 
 		return this
 	}

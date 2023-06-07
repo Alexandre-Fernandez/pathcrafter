@@ -1,0 +1,163 @@
+---
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout>
+	<main>
+		<div></div>
+	</main>
+</Layout>
+
+<script>
+	import { getDistance } from "pathcrafter"
+	import {
+		Path,
+		createPoint2d,
+		getElementEdgePoint,
+		getElementRect,
+		pathcrafter,
+	} from "pathcrafter"
+
+	const div = document.querySelector("main > div")
+	if (!div) throw new Error("div not found")
+
+	// P
+	const p1a = new Path(() => getElementEdgePoint(div, "bottom", 0))
+		.addVertical(() => getElementRect(div).height * -1)
+		.addDiagonal(() => {
+			const length = getElementRect(div).width * 0.04
+			return createPoint2d(length, length)
+		})
+		.addDiagonal(() => {
+			const length = getElementRect(div).width * 0.04
+			return createPoint2d(-length, length)
+		}, "last")
+	const p1b = p1a.deriveParallel(-4)
+	const p1c = p1b.deriveParallel(-6)
+	const p1d = p1c.deriveParallel(-8)
+
+	// A
+	const a1a = new Path(() => getElementEdgePoint(div, "bottom", 6))
+		.addDiagonal((pos) =>
+			getDistance(pos, getElementEdgePoint(div, "top", 9)),
+		)
+		.addDiagonal((pos) =>
+			getDistance(pos, getElementEdgePoint(div, "bottom", 12)),
+		)
+	const a1b = a1a.deriveParallel(4)
+	const a1c = a1b.deriveParallel(4)
+	const a1d = new Path(() => {
+		const { x } = getElementEdgePoint(div, "bottom", 6)
+		const { y } = getElementEdgePoint(div, "left", 50)
+		return { x, y }
+	}).addHorizontal(() => getElementRect(div).width * 0.06)
+	const a1e = a1d.deriveParallel(4)
+
+	// T
+	const tTopA = new Path(() => {
+		const { x, y } = getElementEdgePoint(div, "top", 3)
+		return { x, y: y }
+	}).addHorizontal(() => getElementRect(div).width * 0.97)
+	const tTopB = tTopA.deriveParallel(-15)
+	const t1a = new Path(() => getElementEdgePoint(div, "bottom", 14), {
+		fill: "black",
+	})
+		.addVertical(() => getElementRect(div).height * -1)
+		.addHorizontal(() => getElementRect(div).width * 0.01)
+		.addVertical(() => getElementRect(div).height)
+
+	// H
+	const hA = new Path(() =>
+		getElementEdgePoint(div, "bottom", 17.5),
+	).addVertical(() => getElementRect(div).height * -1)
+	const hB = hA.deriveParallel(4)
+	const hC = new Path(() =>
+		getElementEdgePoint(div, "bottom", 25),
+	).addVertical(() => getElementRect(div).height * -1)
+	const hD = hC.deriveParallel(-4)
+	const hE = new Path(() => {
+		const { x } = getElementEdgePoint(div, "bottom", 17.5)
+		const { y } = getElementEdgePoint(div, "left", 50)
+		return { x, y }
+	}).addHorizontal(() => getElementRect(div).width * 0.075)
+	const hF = hE.deriveParallel(4)
+	const hG = hE.deriveParallel(-4)
+
+	// C
+	const cA = new Path(() =>
+		getElementEdgePoint(div, "bottom", 35),
+	).addQuadratic(
+		() => createPoint2d(0, getElementRect(div).height * -1),
+		() => {
+			const rect = getElementRect(div)
+			return createPoint2d(rect.width * -0.16, rect.height * -0.5)
+		},
+	)
+	const cB = new Path(() => getElementEdgePoint(div, "bottom", 35))
+
+	// R
+	const rA = new Path(() => getElementEdgePoint(div, "bottom", 38))
+		.addVertical(() => getElementRect(div).height * -1, "vert")
+		.addQuadratic(
+			() => createPoint2d(0, getElementRect(div).height * 0.8),
+			() => {
+				const rect = getElementRect(div)
+				return createPoint2d(rect.width * 0.16, rect.height * 0.4)
+			},
+		)
+		.addDiagonal((pos) =>
+			getDistance(pos, getElementEdgePoint(div, "bottom", 46)),
+		)
+	const rB = rA.derivePartial("vert").deriveParallel(4)
+	const rC = rB.deriveParallel(6)
+
+	const { update } = pathcrafter([
+		// P
+		p1a,
+		p1b,
+		p1c,
+		p1d,
+		// A
+		a1a,
+		a1b,
+		a1c,
+		a1d,
+		a1e,
+		// T
+		tTopA,
+		tTopB,
+		t1a,
+		// H
+		hA,
+		hB,
+		hC,
+		hD,
+		hE,
+		hF,
+		hG,
+		// C
+		cA,
+		cB,
+		// R
+		rA,
+		rB,
+		rC,
+		// A
+	])
+	window.addEventListener("resize", update)
+</script>
+
+<style>
+	main {
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	div {
+		width: 80%;
+		height: 30%;
+	}
+</style>
