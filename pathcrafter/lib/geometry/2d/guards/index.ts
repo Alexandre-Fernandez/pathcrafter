@@ -1,4 +1,4 @@
-import { Coordinates2d } from "@src"
+import type { Coordinates2d } from "@src"
 
 export function isCoordinate2d(
 	coordinate2d: unknown,
