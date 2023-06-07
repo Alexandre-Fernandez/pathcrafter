@@ -1,4 +1,4 @@
-import Styles from "@src/core/global/styles.class"
+import Styles from "@src/core/global/classes/styles.class"
 import Path from "@src/core/path/classes/path.class"
 import Svg from "@src/core/svg/classes/svg.class"
 import type { SvgOptions as PathcrafterOptions } from "@src/core/svg/types"
