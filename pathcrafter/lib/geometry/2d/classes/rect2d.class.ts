@@ -1,13 +1,21 @@
 import Point2d from "@lib/geometry/2d/classes/point2d.class"
 import InvalidRect from "@lib/geometry/errors/invalid-rect"
+import { Coordinates2d } from "@src"
 
 class Rect2d {
+	end: Point2d
+
+	position: Point2d
+
 	constructor(
-		public end: Point2d,
-		public position: Point2d = new Point2d(0, 0),
+		end: Coordinates2d,
+		position: Coordinates2d = new Point2d(0, 0),
 	) {
-		if (!Rect2d.isValid(end, position)) {
-			throw new InvalidRect(position, end)
+		this.end = new Point2d(end.x, end.y)
+		this.position = new Point2d(position.x, position.y)
+
+		if (!Rect2d.isValid(this.end, this.position)) {
+			throw new InvalidRect(this.position, this.end)
 		}
 	}
 

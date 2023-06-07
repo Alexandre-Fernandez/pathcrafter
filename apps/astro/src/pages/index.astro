@@ -24,30 +24,38 @@ import Layout from "../layouts/Layout.astro"
 </Layout>
 
 <script>
-	import { Path, Tools, pathcrafter } from "pathcrafter"
+	import {
+		Path,
+		getDistance,
+		getElementEdgePoint,
+		getElementRect,
+		getGapX,
+		getGapY,
+		pathcrafter,
+	} from "pathcrafter"
 
 	const start = document.querySelector("#start")
 	const end = document.querySelector("#end")
 
 	// getters take current position as param
-	const path1 = new Path(Tools.edgePoint(start, "bottom", 50))
+	const path1 = new Path(getElementEdgePoint(start, "bottom", 50))
 		.addVertical(() => {
 			return 50
 		})
 		.addHorizontal((pos) => {
-			return Tools.xTo(pos.x, Tools.elRect(end).right + 100)
+			return getDistance(pos.x, getElementRect(end).right + 100)
 		}, "x")
 		.addVertical(() => {
 			return -(
 				50 +
-				Tools.elRect(start).height +
-				Tools.yGap(start, end, 50)
+				getElementRect(start).height +
+				getGapY(start, end, 50)
 			)
 		})
 		.addHorizontal((pos) => {
-			return Tools.xTo(
+			return getDistance(
 				pos.x,
-				Tools.elRect(start).right + Tools.xGap(start, end, 50),
+				getElementRect(start).right + getGapX(start, end, 50),
 			)
 		})
 	// .addQuadratic(
