@@ -3,12 +3,11 @@
 	"private": true,
 	"scripts": {
 		"dev": "turbo run dev",
+		"build": "turbo run build",
+		"publish:patch": "turbo run publish:patch --filter=pathcrafter",
+		"publish:minor": "turbo run publish:minor --filter=pathcrafter",
+		"publish:major": "turbo run publish:major --filter=pathcrafter",
 		"lint": "turbo run lint",
-		"build": "turbo run build --filter=pathcrafter",
-		"version:patch": "turbo run patch --filter=pathcrafter",
-		"version:minor": "turbo run minor --filter=pathcrafter",
-		"version:major": "turbo run major --filter=pathcrafter",
-		"upload": "turbo run upload --filter=pathcrafter",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\""
 	},
 	"devDependencies": {
