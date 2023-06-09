@@ -3,13 +3,14 @@ import type Point2d from "@lib/geometry/2d/classes/point2d.class"
 import type { Coordinates2d } from "@lib/geometry/2d/types"
 import type { Movement } from "@src/core/movement/types"
 
-export type PathInternals = {
-	movements: Movement[]
-}
-
-export type PathOptions = {
+export interface PathOptions {
 	id: string
 	fill: string
+	stroke: string
+}
+
+export type PathInternals = {
+	movements: Movement[]
 }
 
 export type PathStartingPoint = () => Point2d

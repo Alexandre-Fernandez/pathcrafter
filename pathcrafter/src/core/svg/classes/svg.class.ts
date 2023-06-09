@@ -6,10 +6,6 @@ import Path from "@src/core/path/classes/path.class"
 import type { SvgOptions } from "@src/core/svg/types"
 
 class Svg implements SvgOptions {
-	fill: string
-
-	stroke: string
-
 	strokeWidth: string | number
 
 	#id: string
@@ -31,13 +27,11 @@ class Svg implements SvgOptions {
 		this.#clearCaches() // clear caches for next run
 
 		// init options
-		const { id, fill, stroke, strokeWidth } = {
+		const { id, strokeWidth } = {
 			...Svg.defaultOptions,
 			...options,
 		}
 		this.#id = id
-		this.fill = fill
-		this.stroke = stroke
 		this.strokeWidth = strokeWidth
 
 		this.#updateSize()
@@ -51,8 +45,6 @@ class Svg implements SvgOptions {
 	static get defaultOptions(): SvgOptions {
 		return {
 			id: `_${uid()}`,
-			fill: "none",
-			stroke: "black",
 			strokeWidth: 2,
 		}
 	}
@@ -89,8 +81,6 @@ class Svg implements SvgOptions {
 	}
 
 	#updateAttributes() {
-		this.#svgEl.setAttribute("fill", this.fill)
-		this.#svgEl.setAttribute("stroke", this.stroke)
 		this.#svgEl.setAttribute("stroke-width", `${this.strokeWidth}`)
 		return this
 	}

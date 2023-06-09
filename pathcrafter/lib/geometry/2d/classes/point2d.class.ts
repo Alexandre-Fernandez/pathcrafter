@@ -7,13 +7,13 @@ class Point2d implements Coordinates2d {
 		return new Point2d(x, y)
 	}
 
-	add({ x, y }: Point2d) {
+	add({ x, y }: Coordinates2d) {
 		this.x += x
 		this.y += y
 		return this
 	}
 
-	equals({ x, y }: Point2d) {
+	equals({ x, y }: Coordinates2d) {
 		return this.x === x && this.y === y
 	}
 

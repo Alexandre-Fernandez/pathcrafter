@@ -20,9 +20,9 @@ export function createVector2d(tail: Coordinates2d, head: Coordinates2d) {
 	return new Vector2d(head, tail)
 }
 
-export function getElementRect(element1: SelectorElement) {
+export function getElementRect(element: SelectorElement) {
 	return Rect2d.fromDomRect(
-		getBoundingDocumentRect(selectorToElement(element1)),
+		getBoundingDocumentRect(selectorToElement(element)),
 	)
 }
 
@@ -84,7 +84,7 @@ export function getGapRect(
 	const rect2 = Rect2d.fromDomRect(
 		getBoundingDocumentRect(selectorToElement(element2)),
 	)
-	return rect1.getGap(rect2, false)
+	return rect1.getGap(rect2)
 }
 
 export function getGapX(

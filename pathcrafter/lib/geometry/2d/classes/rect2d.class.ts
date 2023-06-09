@@ -90,7 +90,7 @@ class Rect2d {
 		return Rect2d.isValid(end, position) ? new Rect2d(end, position) : null
 	}
 
-	getGap(rect: Rect2d, returnIntersection = true) {
+	getGap(rect: Rect2d, returnIntersection = false) {
 		const intersection = this.getIntersection(rect)
 		if (intersection) return returnIntersection ? intersection : null
 

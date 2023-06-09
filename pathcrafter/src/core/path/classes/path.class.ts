@@ -24,6 +24,8 @@ import type {
 class Path {
 	fill
 
+	stroke
+
 	#id
 
 	#startingPoint: PathStartingPoint
@@ -61,9 +63,10 @@ class Path {
 			)
 			return new Point2d(x, y)
 		}
-		const { id, fill } = this.#createOptions(options)
+		const { id, fill, stroke } = this.#createOptions(options)
 		this.#id = id
 		this.fill = fill
+		this.stroke = stroke
 
 		// dom
 		this.#pathEl = document.createElementNS(SVG_NAMESPACE, "path")
@@ -75,10 +78,11 @@ class Path {
 		return {
 			id: `_${uid()}`,
 			fill: "none",
+			stroke: "black",
 		}
 	}
 
-	/** Read-only id of this `Path` and of the DOM element. */
+	/** Read-only id of this `Path` object and of the DOM element. */
 	get id() {
 		return this.#id
 	}
@@ -316,6 +320,7 @@ class Path {
 
 		this.#pathEl.setAttribute("d", d)
 		this.#pathEl.setAttribute("fill", this.fill)
+		this.#pathEl.setAttribute("stroke", this.stroke)
 
 		return this
 	}

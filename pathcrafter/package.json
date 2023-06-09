@@ -2,9 +2,17 @@
 	"name": "pathcrafter",
 	"version": "0.9.0",
 	"author": "alexandre-fernandez",
-	"description": "TO DO",
+	"description": "Create responsive document relative SVG paths programmatically.",
 	"keywords": [
-		"TO DO"
+		"pathcrafter",
+		"svg",
+		"path",
+		"dom",
+		"fill",
+		"stroke",
+		"responsive",
+		"diagram",
+		"line"
 	],
 	"license": "MIT",
 	"homepage": "https://github.com/alexandre-fernandez/pathcrafter",
