@@ -169,6 +169,22 @@ import Layout from "../layouts/Layout.astro"
 	}).addHorizontal(() => getElementRect(div).width * 0.08)
 
 	// R
+	const r2a = new Path(() => getElementEdgePoint(div, "bottom", 87.5))
+		.addVertical(() => getElementRect(div).height * -1)
+		.addHorizontal(
+			(pos) =>
+				getDistance(pos, getElementEdgePoint(div, "bottom", 100)).x,
+		)
+		.addVertical(() => getElementRect(div).height * 0.6)
+		.addHorizontal(
+			(pos) =>
+				getDistance(pos, getElementEdgePoint(div, "bottom", 87.5)).x,
+		)
+		.addDiagonal((pos) =>
+			getDistance(pos, getElementEdgePoint(div, "bottom", 100)),
+		)
+	const r2b = r2a.deriveParallel(-12)
+	const r2c = r2a.deriveParallel(-15)
 
 	const { update } = pathcrafter([
 		// P
@@ -224,6 +240,9 @@ import Layout from "../layouts/Layout.astro"
 		eC,
 		eD,
 		// R
+		r2a,
+		r2b,
+		r2c,
 	])
 	window.addEventListener("resize", update)
 </script>
