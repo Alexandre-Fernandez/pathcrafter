@@ -253,7 +253,7 @@ function getElementEdgePoint(
 ): Point2d {}
 ```
 
-### getDistance
+### `getDistance`
 
 The `getDistance` function simply performs a substraction between `destination` and `position` giving you the distance between the two points. If `position` and `destination` are numbers then it will return a number otherwise if `position` and `destination` are `Coordinates2d` (`{ x: number, y: number }`) it will return a `Coordinates2d`.
 
@@ -264,7 +264,7 @@ function getDistance<T extends number | Coordinates2d>(
 ): T extends number ? number : Coordinates2d {}
 ```
 
-### getGapRect
+### `getGapRect`
 
 The `getGapRect` function return a rectangle corresponding to a gap between two elements. If the elements intersect it will return `null`.
 
@@ -275,7 +275,7 @@ function getGapRect(
 ): Rect2d | null {}
 ```
 
-### getGapX
+### `getGapX`
 
 The `getGapX` function return a `percentage` of the horizontal gap between two elements. This can be useful if you want to position your path between two element.
 
@@ -287,7 +287,7 @@ function getGapX(
 ): number {}
 ```
 
-### getGapY
+### `getGapY`
 
 The `getGapY` function return a `percentage` of the vertical gap between two elements. This can be useful if you want to position your path between two element.
 
