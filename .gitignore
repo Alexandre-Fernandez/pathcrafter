@@ -50,5 +50,8 @@ lerna-debug.log*
 dist
 build
 
-#astro
+# astro
 .astro/
+
+# backup
+*.bk
