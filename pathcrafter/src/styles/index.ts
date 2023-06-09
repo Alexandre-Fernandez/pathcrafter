@@ -10,5 +10,8 @@ export default `
 	pointer-events: none;
 	top: 0;
 	left: 0;
+	max-width: 100%;
+	max-height: 100%;
+	overflow: hidden;
 }
 `
