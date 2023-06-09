@@ -1,6 +1,5 @@
 <div align="center" >
-    <img src="https://github.com/Alexandre-Fernandez/pathcrafter/blob/main/img/logo.png" alt="pathcrafter logo" width="60%">
-    <br/>
+    <img src="https://github.com/Alexandre-Fernandez/pathcrafter/blob/main/img/logo.png" alt="pathcrafter logo" width="66%">
     <br/>
 	<h1>pathcrafter</h1>
     <p>Create responsive document relative SVG paths programmatically.</p>
