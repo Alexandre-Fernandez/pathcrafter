@@ -11,6 +11,9 @@
 			"cache": false,
 			"persistent": true
 		},
-		"publish": {}
+		"publish": {},
+		"patch": {},
+		"minor": {},
+		"major": {}
 	}
 }

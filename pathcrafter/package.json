@@ -1,6 +1,6 @@
 {
 	"name": "pathcrafter",
-	"version": "0.9.0",
+	"version": "1.0.1",
 	"author": "alexandre-fernandez",
 	"description": "Create responsive document relative SVG paths programmatically.",
 	"keywords": [
@@ -28,6 +28,9 @@
 	"scripts": {
 		"prepare": "ts-patch install -s",
 		"build": "tsc --project tsconfig.json && node bin/build.cjs",
+		"patch": "npm version patch",
+		"minor": "npm version minor",
+		"major": "npm version major",
 		"publish": "npm run build && node bin/pre-publish.cjs && npm publish ; node bin/post-publish.cjs",
 		"lint": "eslint --ignore-path .eslintignore ."
 	},

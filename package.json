@@ -5,7 +5,10 @@
 		"build": "turbo run build",
 		"dev": "turbo run dev",
 		"lint": "turbo run lint",
-		"publish": "turbo run publish",
+		"version:patch": "turbo run patch",
+		"version:minor": "turbo run minor",
+		"version:major": "turbo run major",
+		"upload": "turbo run publish",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\""
 	},
 	"devDependencies": {
