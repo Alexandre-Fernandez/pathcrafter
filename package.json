@@ -2,13 +2,13 @@
 	"name": "pathcrafter-monorepo",
 	"private": true,
 	"scripts": {
-		"build": "turbo run build",
 		"dev": "turbo run dev",
 		"lint": "turbo run lint",
-		"version:patch": "turbo run patch",
-		"version:minor": "turbo run minor",
-		"version:major": "turbo run major",
-		"upload": "turbo run publish",
+		"build": "turbo run build --filter=pathcrafter",
+		"version:patch": "turbo run patch --filter=pathcrafter",
+		"version:minor": "turbo run minor --filter=pathcrafter",
+		"version:major": "turbo run major --filter=pathcrafter",
+		"upload": "turbo run publish --filter=pathcrafter",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\""
 	},
 	"devDependencies": {

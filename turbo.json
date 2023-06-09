@@ -11,9 +11,18 @@
 			"cache": false,
 			"persistent": true
 		},
-		"publish": {},
-		"patch": {},
-		"minor": {},
-		"major": {}
+		"publish": {
+			"dependsOn": ["build"],
+			"cache": false
+		},
+		"patch": {
+			"cache": false
+		},
+		"minor": {
+			"cache": false
+		},
+		"major": {
+			"cache": false
+		}
 	}
 }
