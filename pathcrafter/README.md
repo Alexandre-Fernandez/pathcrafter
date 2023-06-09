@@ -116,7 +116,7 @@ const { update } = pathcrafter([pathBetweenDiv1AndDiv2]) // array of paths
 window.addEventListener("resize", update) // updating path on window resize
 ```
 
-You can path multiple paths to the `pathcrafter` function, however **all grouped paths must have the same stroke width**.
+You can give multiple paths to the `pathcrafter` function, however **all grouped paths will have the same stroke width**. If you need different stroke widths you can use `pathcrafter` multiple times for each stroke width.
 
 ## Reference
 

@@ -1,6 +1,6 @@
 {
 	"name": "pathcrafter",
-	"version": "1.0.29",
+	"version": "1.0.30",
 	"author": "alexandre-fernandez",
 	"description": "Create responsive document-relative SVG paths programmatically.",
 	"keywords": [
