@@ -8,7 +8,7 @@
 		"version:patch": "turbo run patch --filter=pathcrafter",
 		"version:minor": "turbo run minor --filter=pathcrafter",
 		"version:major": "turbo run major --filter=pathcrafter",
-		"upload": "turbo run publish --filter=pathcrafter",
+		"upload": "turbo run upload --filter=pathcrafter",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\""
 	},
 	"devDependencies": {

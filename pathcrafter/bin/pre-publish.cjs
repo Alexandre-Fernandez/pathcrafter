@@ -7,6 +7,8 @@ const {
 } = require("fs")
 const { join } = require("path")
 
+console.log("> pre-publishing")
+
 const PACKAGE_JSON_DIR = join(__dirname, "..")
 const BUILD_ENTRY_POINT = join("src", "index.ts")
 const BUILD_OUT_DIR = join("dist", "src")
@@ -37,3 +39,5 @@ packageJson.types = types
 writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, "\t"), {
 	encoding: "utf8",
 })
+
+console.log("> pre-publishing successful !\n")

@@ -11,8 +11,7 @@
 			"cache": false,
 			"persistent": true
 		},
-		"publish": {
-			"dependsOn": ["build"],
+		"upload": {
 			"cache": false
 		},
 		"patch": {

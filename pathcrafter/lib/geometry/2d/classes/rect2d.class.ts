@@ -1,6 +1,6 @@
 import Point2d from "@lib/geometry/2d/classes/point2d.class"
 import InvalidRect from "@lib/geometry/errors/invalid-rect"
-import { Coordinates2d } from "@src"
+import type { Coordinates2d } from "@src"
 
 class Rect2d {
 	end: Point2d
