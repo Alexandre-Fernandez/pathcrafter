@@ -1,7 +1,8 @@
 <div align="center" >
-	<img src="https://raw.githubusercontent.com/Alexandre-Fernandez/pathcrafter/main/img/logo.png" alt="pathcrafter logo" width="33%">
-	<h1>pathcrafter</h1>
-	<p>Create responsive document relative SVG paths programmatically.</p>
+    <img src="https://github.com/Alexandre-Fernandez/pathcrafter/blob/8171fe568d8b54b3127216497822149b1d1c55f2/img/logo.png" alt="pathcrafter logo" width="33%">
+    <h1>pathcrafter</h1>
+    <p>Create responsive document relative SVG paths programmatically.</p>
+
 </div>
 
 ## Features
@@ -209,7 +210,7 @@ interface PathOptions {
 }
 ```
 
-Derived path reference the parent path movements and can modify their return values before applying them.
+Derived paths reference the parent path movements and can modify their return values before applying them.
 Each movement getter should (and will if used with `pathcrafter`) only run once per Path (including derived paths) per update.
 
 ### `pathcrafter`
